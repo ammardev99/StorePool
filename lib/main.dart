@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:zi_core/zi_core_io.dart';
 void main() {
+  ziCoreInit(beta: true);
   runApp(const MyApp());
 }
 
