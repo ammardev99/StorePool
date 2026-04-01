@@ -17,7 +17,6 @@ export './content_legals/info_strings.dart';
 export './content_legals/shell_data.dart';
 export './content_legals/content_widgets.dart';
 
-
 // MemberShip
 export './membership_plans/upgrade_dialog.dart';
 export './membership_plans/action_tile.dart';
@@ -47,7 +46,16 @@ export 'widgets/global_widgets.dart';
 export './widgets/zi_info_tag.dart';
 export './widgets/price_text.dart';
 
+// -----------------
+
+export './auth_connect_controllers/forgot_controller.dart';
+export './auth_connect_controllers/login_controller.dart';
+export './auth_connect_controllers/reset_password_controller.dart';
+export './auth_connect_controllers/signup_controller.dart';
+export './auth_connect_controllers/profile_controller.dart';
+
 //-------------App Shell------------//
 // v1+1 Jan 15 2026 - LineOvia Project Management Application
 // v1+2 Feb 1 2026 - CashBook Shop Management Application
-// v1+3 March 10 2026 - Store Solvic Store Management Application
+// v1+2 March 10 2026 - Store Solvic Store Management Application
+// v1+3 April 1 2026 - Store Pool Management Application

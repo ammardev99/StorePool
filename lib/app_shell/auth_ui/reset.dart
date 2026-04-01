@@ -12,20 +12,11 @@ class ResetPasswordView extends StatefulWidget {
 }
 
 class _ResetPasswordViewState extends State<ResetPasswordView> {
-  final TextEditingController currentPassCtrl = TextEditingController();
-  final TextEditingController newPassCtrl = TextEditingController();
-  final TextEditingController confirmPassCtrl = TextEditingController();
-  final TextEditingController secQuestionCtrl = TextEditingController();
-  final TextEditingController secAnswerCtrl = TextEditingController();
-  bool isUpdateSecurityQA = false;
+  final controller = ResetPasswordController();
 
   @override
   void dispose() {
-    currentPassCtrl.dispose();
-    newPassCtrl.dispose();
-    confirmPassCtrl.dispose();
-    secQuestionCtrl.dispose();
-    secAnswerCtrl.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -46,54 +37,64 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
               title: ShellData.resetPassword.title,
               content: ShellData.resetPassword.info,
             ),
+
             ziGap(10),
+
             ZiInput(
               label: "Current Password",
               variant: ZiInputVariant.stacked,
               type: ZiInputType.password,
-              controller: currentPassCtrl,
+              controller: controller.currentPassCtrl,
             ),
+
             ziGap(16),
+
             ZiInput(
               label: "New Password",
               variant: ZiInputVariant.stacked,
               type: ZiInputType.password,
-              controller: newPassCtrl,
+              controller: controller.newPassCtrl,
               onChanged: (_) => setState(() {}),
             ),
+
             ziGap(16),
+
             ZiInput(
               label: "Confirm Password",
               variant: ZiInputVariant.stacked,
               type: ZiInputType.password,
-              controller: confirmPassCtrl,
+              controller: controller.confirmPassCtrl,
               onChanged: (_) => setState(() {}),
             ),
+
             ziGap(16),
+
             Row(
               children: [
                 ZiCheckbox(
-                  value: isUpdateSecurityQA,
-                  onChanged:
-                      (value) => setState(() => isUpdateSecurityQA = value),
+                  value: controller.isUpdateSecurityQA,
+                  onChanged: (value) {
+                    controller.toggleSecurityQA(value);
+                    setState(() {});
+                  },
                 ),
                 ziGap(10),
                 const Text("Update security question!"),
               ],
             ),
 
-            if (isUpdateSecurityQA) ...[
+            if (controller.isUpdateSecurityQA) ...[
               ziGap(16),
               ZiInput(
                 label: "Security Question",
                 variant: ZiInputVariant.stacked,
-                controller: secQuestionCtrl,
+                controller: controller.secQuestionCtrl,
               ),
               ziGap(16),
               ZiInput(
                 label: "Secure Answer",
                 variant: ZiInputVariant.stacked,
-                controller: secAnswerCtrl,
+                controller: controller.secAnswerCtrl,
               ),
             ],
 
@@ -101,10 +102,14 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
 
             ZiButtonB(
               expand: true,
-              label: "Update Password",
-              action: () {
-                // TODO: Implement update password action
-              },
+              label: controller.isLoading ? "Updating..." : "Update Password",
+              action:
+                  controller.isValid
+                      ? () async {
+                        await controller.onSubmit();
+                        setState(() {});
+                      }
+                      : null,
             ),
           ],
         ),

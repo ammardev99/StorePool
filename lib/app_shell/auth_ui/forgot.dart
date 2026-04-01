@@ -10,13 +10,11 @@ class ForgotView extends StatefulWidget {
 }
 
 class _ForgotViewState extends State<ForgotView> {
-  final TextEditingController emailCtrl = TextEditingController();
-  final TextEditingController phoneCtrl = TextEditingController();
+  final controller = ForgotController();
 
   @override
   void dispose() {
-    emailCtrl.dispose();
-    phoneCtrl.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -32,27 +30,30 @@ class _ForgotViewState extends State<ForgotView> {
             color: ZiColors.primary,
             size: 80,
           ),
+
           heroSectionContent(
             title: ShellData.forgotPassword.title,
             content: ShellData.forgotPassword.info,
           ),
+
           ziGap(10),
 
-          // ── Email + Phone ──────────────────────────────────────────
           Form(
             child: Column(
               children: [
                 ZiInput(
                   label: "Email",
                   variant: ZiInputVariant.stacked,
-                  controller: emailCtrl,
+                  controller: controller.emailCtrl,
                   onChanged: (_) => setState(() {}),
                 ),
+
                 ziGap(16),
+
                 ZiInput(
                   label: "Phone Number",
                   variant: ZiInputVariant.stacked,
-                  controller: phoneCtrl,
+                  controller: controller.phoneCtrl,
                   onChanged: (_) => setState(() {}),
                 ),
               ],
@@ -61,8 +62,14 @@ class _ForgotViewState extends State<ForgotView> {
 
           ziGap(20),
 
-          // ── action button ──────────────────────────────────────────────────
-          ZiButtonB(expand: true, label: "Continue", action: () {}),
+          ZiButtonB(
+            expand: true,
+            label: "Continue",
+            action: () async {
+              await controller.onSubmit();
+              setState(() {}); // refresh if needed
+            },
+          ),
         ],
       ),
     );
