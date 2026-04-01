@@ -121,7 +121,9 @@ class _SignupViewState extends State<SignupView> {
                     // TODO: Implement signup action
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => NameAppView()),
+                      MaterialPageRoute(
+                        builder: (context) => StorePoolAppView(),
+                      ),
                     );
                   },
                 ),

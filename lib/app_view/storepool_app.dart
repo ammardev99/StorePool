@@ -4,14 +4,14 @@ import 'package:zi_core/zi_core_io.dart';
 import '../app_shell/app_shell_io.dart';
 import 'view_io.dart';
 
-class NameAppView extends StatefulWidget {
-  const NameAppView({super.key});
+class StorePoolAppView extends StatefulWidget {
+  const StorePoolAppView({super.key});
 
   @override
-  State<NameAppView> createState() => _NameAppViewState();
+  State<StorePoolAppView> createState() => _StorePoolAppViewState();
 }
 
-class _NameAppViewState extends State<NameAppView> {
+class _StorePoolAppViewState extends State<StorePoolAppView> {
   int pageIndex = 0;
   List mainPavesView = [DashboardView(), DashboardView(), MenuView()];
   List<TabItem> mainPages = [

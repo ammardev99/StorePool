@@ -1,2 +1,2 @@
-export './name_app.dart';
+export 'storepool_app.dart';
 export './bottom_pages/dashboard.dart';
