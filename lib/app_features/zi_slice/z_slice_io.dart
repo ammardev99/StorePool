@@ -1,8 +1,9 @@
+export 'tile_widget.dart';
+export 'view_ui.dart';
+//zata
 export 'zata/actions_on_tile.dart';
 export 'zata/controller.dart';
 export 'zata/form.dart';
-export 'tile_widget.dart';
-export 'view_ui.dart';
 
 /*
 ─── Zi_Slice — import this in your feature ──────────────────────────────────

@@ -8,8 +8,9 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
+import 'package:storepool/app_features/zi_slice/zata/controller.dart'
+    show XxxSliceController;
 import 'package:zi_core/zi_core_io.dart';
-import 'controller.dart';
 
 class XxxSliceForm extends StatefulWidget with ZiFormMixin {
   final XxxSliceController ctrl;

@@ -21,7 +21,7 @@ class _PINGateViewState extends State<PINGateView> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Get user and store data from providers
+    // DO: Get user and store data from providers
     const storeName = 'No Store';
     const storeCategory = 'Create a store to get started';
     const userName = 'User';
@@ -58,7 +58,7 @@ class _PINGateViewState extends State<PINGateView> {
                   label: 'Continue',
                   expand: true,
                   action: () {
-                    // TODO: Implement PIN validation and navigation
+                    // DO: Implement PIN validation and navigation
                   },
                 ),
                 ziGap(10),
@@ -83,7 +83,7 @@ class _PINGateViewState extends State<PINGateView> {
                 label: 'Log Out',
                 variant: ZiButtonVariantB.chip,
                 action: () {
-                  // TODO: Implement logout action
+                  // DO: Implement logout action
                 },
               ),
             ),

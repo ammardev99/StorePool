@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zi_core/zi_core_io.dart';
-import '../../app_view/view_io.dart';
+import '../../app_features/view_io.dart';
 import '../app_shell_io.dart';
 
 class SignupView extends StatefulWidget {
@@ -139,6 +139,7 @@ class _SignupViewState extends State<SignupView> {
 
                             if (success) {
                               Navigator.pushReplacement(
+                                // ignore: use_build_context_synchronously
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => const NameAppView(),

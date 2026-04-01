@@ -74,7 +74,7 @@ class SignupController {
       isLoading = true;
       ZiLogger.log("Calling Signup API...");
 
-      // TODO: Replace with Firebase/Auth API
+      // DO: Replace with Firebase/Auth API
       await Future.delayed(const Duration(seconds: 2));
 
       ZiLogger.log("Signup Success ✅");

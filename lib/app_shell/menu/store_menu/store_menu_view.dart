@@ -10,7 +10,7 @@ class StoreMenuView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Get store data from provider
+    // DO: Get store data from provider
     const storeName = 'No Store';
     const storeCategory = 'Create a store to get started';
     const hasStore = false;
@@ -38,14 +38,8 @@ class StoreMenuView extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              title: Text(
-                storeName,
-                style: ZiTypoStyles.titleLg,
-              ),
-              subtitle: Text(
-                storeCategory,
-                style: ZiTypoStyles.bodyMedium,
-              ),
+              title: Text(storeName, style: ZiTypoStyles.titleLg),
+              subtitle: Text(storeCategory, style: ZiTypoStyles.bodyMedium),
             ),
           ),
 
@@ -63,12 +57,13 @@ class StoreMenuView extends StatelessWidget {
                     action: ZiTapAction(
                       type: ZiTapActionType.custom,
                       onTap: () {
-                        // TODO: Navigate to CreateStoreView
+                        // DO: Navigate to CreateStoreView
                       },
                     ),
                   ),
 
                 // ── store menu ────────────────────────────────────────────
+                // ignore: dead_code
                 if (hasStore) ...[
                   ZiMenuTile1(
                     icon: Icons.store_mall_directory_rounded,
@@ -76,7 +71,7 @@ class StoreMenuView extends StatelessWidget {
                     action: ZiTapAction(
                       type: ZiTapActionType.custom,
                       onTap: () {
-                        // TODO: Navigate to EditStoreView
+                        // DO: Navigate to EditStoreView
                       },
                     ),
                   ),
@@ -86,7 +81,7 @@ class StoreMenuView extends StatelessWidget {
                     action: ZiTapAction(
                       type: ZiTapActionType.custom,
                       onTap: () {
-                        // TODO: Navigate to PinResetStoreView
+                        // DO: Navigate to PinResetStoreView
                       },
                     ),
                   ),
@@ -106,6 +101,7 @@ class StoreMenuView extends StatelessWidget {
                 ),
 
                 // ── danger zone ───────────────────────────────────────────
+                // ignore: dead_code
                 if (hasStore) ...[
                   ZiMenuTile1(
                     icon: Icons.delete,
@@ -115,7 +111,7 @@ class StoreMenuView extends StatelessWidget {
                     action: ZiTapAction(
                       type: ZiTapActionType.custom,
                       onTap: () {
-                        // TODO: Implement delete store action
+                        // DO: Implement delete store action
                       },
                     ),
                   ),

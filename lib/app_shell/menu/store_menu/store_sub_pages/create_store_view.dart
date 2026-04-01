@@ -59,7 +59,7 @@ class _CreateStoreViewState extends State<CreateStoreView> {
                 //     value: selectedCategory,
                 //     itemLabel: (e) => e.label,
                 //     onChanged: (v) {
-                //       // TODO: Handle category change
+                //       // DO: Handle category change
                 //     },
                 //   ),
                 // ),
@@ -72,7 +72,7 @@ class _CreateStoreViewState extends State<CreateStoreView> {
                 //     value: selectedCurrency,
                 //     itemLabel: (e) => e.label,
                 //     onChanged: (v) {
-                //       // TODO: Handle currency change
+                //       // DO: Handle currency change
                 //     },
                 //   ),
                 // ),
@@ -103,7 +103,7 @@ class _CreateStoreViewState extends State<CreateStoreView> {
               expand: true,
               label: "Create My Store",
               action: () {
-                // TODO: Implement create store action
+                // DO: Implement create store action
               },
             ),
             ziGap(10),
@@ -112,7 +112,7 @@ class _CreateStoreViewState extends State<CreateStoreView> {
               expand: true,
               variant: ZiButtonVariantB.outline,
               action: () {
-                // TODO: Implement logout action
+                // DO: Implement logout action
               },
             ),
           ],

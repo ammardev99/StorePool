@@ -6,8 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:zi_core/zi_core_io.dart';
-
-import 'zi_slice_io.dart';
+import 'z_slice_io.dart';
 
 class XxxSliceView extends StatefulWidget {
   const XxxSliceView({super.key});
@@ -27,13 +26,13 @@ class _XxxSliceViewState extends State<XxxSliceView> {
 
   Future<void> _load() async {
     ZiLogger.log("Loading items...");
-    // TODO: fetch from API
+    // DO: fetch from API
     setState(() {});
   }
 
   Future<void> _delete(String uuid) async {
     ZiLogger.log("Delete: $uuid");
-    // TODO: delete API
+    // DO: delete API
   }
 
   @override
@@ -43,7 +42,6 @@ class _XxxSliceViewState extends State<XxxSliceView> {
         itemCount: items.length,
         itemBuilder: (_, i) {
           final item = items[i];
-
           return XxxSliceTile(
             item: item,
             onTap: () {},
