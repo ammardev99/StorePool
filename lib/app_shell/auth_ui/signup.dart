@@ -11,22 +11,11 @@ class SignupView extends StatefulWidget {
 }
 
 class _SignupViewState extends State<SignupView> {
-  final TextEditingController nameCtrl = TextEditingController();
-  final TextEditingController phoneCtrl = TextEditingController();
-  final TextEditingController emailCtrl = TextEditingController();
-  final TextEditingController passwordCtrl = TextEditingController();
-  final TextEditingController secQCtrl = TextEditingController();
-  final TextEditingController secACtrl = TextEditingController();
-  bool agreedToTerms = false;
+  final controller = SignupController();
 
   @override
   void dispose() {
-    nameCtrl.dispose();
-    phoneCtrl.dispose();
-    emailCtrl.dispose();
-    passwordCtrl.dispose();
-    secQCtrl.dispose();
-    secACtrl.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -42,56 +31,78 @@ class _SignupViewState extends State<SignupView> {
             color: ZiColors.primary,
             size: 80,
           ),
+
           heroSectionContent(
             title: ShellData.register.title,
             content: ShellData.register.info,
           ),
+
           ziGap(10),
+
           Form(
             child: Column(
               children: [
                 ZiInput(
                   label: "Full Name",
                   variant: ZiInputVariant.stacked,
-                  controller: nameCtrl,
+                  controller: controller.nameCtrl,
+                  onChanged: (_) => setState(() {}),
                 ),
+
                 ziGap(10),
+
                 ZiInput(
                   label: "Phone Number",
                   variant: ZiInputVariant.stacked,
-                  controller: phoneCtrl,
+                  controller: controller.phoneCtrl,
+                  onChanged: (_) => setState(() {}),
                 ),
+
                 ziGap(16),
+
                 ZiInput(
                   label: "Email",
                   variant: ZiInputVariant.stacked,
-                  controller: emailCtrl,
+                  controller: controller.emailCtrl,
+                  onChanged: (_) => setState(() {}),
                 ),
+
                 ziGap(16),
+
                 ZiInput(
                   label: "Password",
                   variant: ZiInputVariant.stacked,
                   type: ZiInputType.password,
-                  controller: passwordCtrl,
+                  controller: controller.passwordCtrl,
+                  onChanged: (_) => setState(() {}),
                 ),
+
                 ziGap(16),
+
                 ZiInput(
                   label: "Security Question",
                   variant: ZiInputVariant.stacked,
-                  controller: secQCtrl,
+                  controller: controller.secQCtrl,
                 ),
+
                 ziGap(10),
+
                 ZiInput(
                   label: "Security Answer",
                   variant: ZiInputVariant.stacked,
-                  controller: secACtrl,
+                  controller: controller.secACtrl,
                 ),
+
                 ziGap(16),
+
                 Row(
                   children: [
                     ZiCheckbox(
-                      value: agreedToTerms,
-                      onChanged: (v) => setState(() => agreedToTerms = v),
+                      value: controller.agreedToTerms,
+                      onChanged: (v) {
+                        controller.toggleTerms(v);
+                        setState(() {});
+                      },
                     ),
                     ziGap(10),
                     const Text("Agree with"),
@@ -101,34 +112,48 @@ class _SignupViewState extends State<SignupView> {
                       variant: ZiButtonVariantB.inLine,
                       style: ZiButtonStyleB(foregroundColor: ZiColors.primary),
                       action: () {
+                        ZiLogger.log("Navigate to Terms");
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => TermsConditionsPageView(),
+                            builder:
+                                (context) => const TermsConditionsPageView(),
                           ),
                         );
                       },
                     ),
                   ],
                 ),
-                ziGap(10),
 
                 ziGap(10),
+
                 ZiButtonB(
-                  label: "Signup",
+                  label: controller.isLoading ? "Signing up..." : "Signup",
                   expand: true,
-                  action: () {
-                    // TODO: Implement signup action
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => NameAppView()),
-                    );
-                  },
+                  action:
+                      controller.isValid
+                          ? () async {
+                            final success = await controller.onSignup();
+                            setState(() {});
+
+                            if (success) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const NameAppView(),
+                                ),
+                              );
+                            }
+                          }
+                          : null,
                 ),
               ],
             ),
           ),
+
           ziGap(20),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -137,15 +162,18 @@ class _SignupViewState extends State<SignupView> {
                 label: "Sign In",
                 variant: ZiButtonVariantB.inLine,
                 action: () {
+                  ZiLogger.log("Navigate to Login");
+
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginView()),
+                    MaterialPageRoute(builder: (context) => const LoginView()),
                   );
                 },
                 style: ZiButtonStyleB(foregroundColor: ZiColors.primary),
               ),
             ],
           ),
+
           ziGap(20),
         ],
       ),

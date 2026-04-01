@@ -10,13 +10,11 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final TextEditingController emailCtrl = TextEditingController();
-  final TextEditingController passwordCtrl = TextEditingController();
+  final controller = LoginController();
 
   @override
   void dispose() {
-    emailCtrl.dispose();
-    passwordCtrl.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -27,32 +25,41 @@ class _LoginViewState extends State<LoginView> {
         shrinkWrap: true,
         children: [
           ziGap(40),
+
           Image.asset(
             ShellImages.logo,
             width: 100,
             height: 100,
             fit: BoxFit.contain,
           ),
+
           ziGap(10),
+
           heroSectionContent(
             title: ShellData.login.title,
             content: ShellData.login.info,
           ),
+
           ziGap(10),
+
           Form(
             child: Column(
               children: [
                 ZiInput(
                   label: "Email",
                   variant: ZiInputVariant.stacked,
-                  controller: emailCtrl,
+                  controller: controller.emailCtrl,
+                  onChanged: (_) => setState(() {}),
                 ),
+
                 ziGap(16),
+
                 ZiInput(
                   label: "Password",
                   variant: ZiInputVariant.stacked,
                   type: ZiInputType.password,
-                  controller: passwordCtrl,
+                  controller: controller.passwordCtrl,
+                  onChanged: (_) => setState(() {}),
                 ),
                 ziGap(10),
                 Row(
@@ -62,29 +69,39 @@ class _LoginViewState extends State<LoginView> {
                       label: "Forgot Password!",
                       variant: ZiButtonVariantB.inLine,
                       action: () {
+                        ZiLogger.log("Navigate to Forgot Password");
+
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => ForgotView()),
+                          MaterialPageRoute(
+                            builder: (context) => const ForgotView(),
+                          ),
                         );
                       },
                       style: ZiButtonStyleB(foregroundColor: ZiColors.primary),
                     ),
                   ],
                 ),
+
                 ziGap(10),
 
-                ziGap(6),
                 ZiButtonB(
-                  label: "Login",
+                  label: controller.isLoading ? "Logging in..." : "Login",
                   expand: true,
-                  action: () {
-                    // TODO: Implement login action
-                  },
+                  action:
+                      controller.isValid
+                          ? () async {
+                            await controller.onLogin();
+                            setState(() {});
+                          }
+                          : null,
                 ),
               ],
             ),
           ),
+
           ziGap(20),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -93,10 +110,11 @@ class _LoginViewState extends State<LoginView> {
                 label: "Create Account",
                 variant: ZiButtonVariantB.inLine,
                 action: () {
-                  // TODO: Navigate to SignupView
+                  ZiLogger.log("Navigate to Signup");
+
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SignupView()),
+                    MaterialPageRoute(builder: (context) => const SignupView()),
                   );
                 },
                 style: ZiButtonStyleB(foregroundColor: ZiColors.primary),

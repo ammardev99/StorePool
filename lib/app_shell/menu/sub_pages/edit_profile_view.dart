@@ -10,21 +10,23 @@ class EditProfileView extends StatefulWidget {
 }
 
 class _EditProfileViewState extends State<EditProfileView> {
-  final TextEditingController nameCtrl = TextEditingController();
-  final TextEditingController phoneCtrl = TextEditingController();
-  final TextEditingController emailCtrl = TextEditingController();
+  final controller = EditProfileController();
 
   @override
   void initState() {
     super.initState();
-    // TODO: Prefill data from user profile
+
+    // 🔥 Replace with real user data (from API / local storage)
+    controller.init(
+      name: "Ammar",
+      phone: "03001234567",
+      email: "ammar@gmail.com",
+    );
   }
 
   @override
   void dispose() {
-    nameCtrl.dispose();
-    phoneCtrl.dispose();
-    emailCtrl.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -35,42 +37,56 @@ class _EditProfileViewState extends State<EditProfileView> {
       body: Form(
         child: ListView(
           children: [
-                                    ZiSvgIcon(
-                          path: ShellSVGs.avPerson,
-                          color: ZiColors.primary,
-                          size: 80,
-                        ),
+            ZiSvgIcon(
+              path: ShellSVGs.avPerson,
+              color: ZiColors.primary,
+              size: 80,
+            ),
 
             heroSectionContent(
               title: ShellData.editProfile.title,
               content: ShellData.editProfile.info,
             ),
+
             ziGap(20),
+
             ZiInput(
               label: "Full Name",
-              controller: nameCtrl,
+              controller: controller.nameCtrl,
               variant: ZiInputVariant.stacked,
+              onChanged: (_) => setState(() {}),
             ),
+
             ziGap(16),
+
             ZiInput(
               label: "Phone Number",
-              controller: phoneCtrl,
+              controller: controller.phoneCtrl,
               variant: ZiInputVariant.stacked,
+              onChanged: (_) => setState(() {}),
             ),
+
             ziGap(16),
+
             ZiInput(
               label: "Email",
-              controller: emailCtrl,
+              controller: controller.emailCtrl,
               variant: ZiInputVariant.stacked,
               enabled: false,
             ),
+
             ziGap(20),
+
             ZiButtonB(
               expand: true,
-              label: "Update Profile",
-              action: () {
-                // TODO: Implement update profile action
-              },
+              label: controller.isLoading ? "Updating..." : "Update Profile",
+              action:
+                  controller.isValid
+                      ? () async {
+                        await controller.onUpdate();
+                        setState(() {});
+                      }
+                      : null,
             ),
           ],
         ),

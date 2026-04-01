@@ -1,2 +1,1 @@
-export './name_app.dart';
-export './bottom_pages/dashboard.dart';
+export 'name_app.dart';

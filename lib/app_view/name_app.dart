@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:storepool/app_features/zi_slice_1/zi_slice_io.dart';
+import 'package:storepool/app_view/bottom_pages/dashboard.dart';
 import 'package:zi_core/zi_core_io.dart';
 
 import '../app_shell/app_shell_io.dart';
-import 'view_io.dart';
 
 class NameAppView extends StatefulWidget {
   const NameAppView({super.key});
@@ -13,10 +14,20 @@ class NameAppView extends StatefulWidget {
 
 class _NameAppViewState extends State<NameAppView> {
   int pageIndex = 0;
-  List mainPavesView = [DashboardView(), DashboardView(), MenuView()];
+  List mainPavesView = [
+    
+    DashboardView(), 
+    
+    DashboardView(), 
+    
+    XxxSliceView(),
+    MenuView(),
+    
+    ];
   List<TabItem> mainPages = [
     TabItem(icon: Icons.dashboard_rounded, title: 'Dashboard'),
     TabItem(icon: Icons.dashboard_rounded, title: 'D2'),
+    TabItem(icon: Icons.dashboard_rounded, title: 'Slice 1'),
     TabItem(icon: Icons.menu, title: 'Menu'),
   ];
 
