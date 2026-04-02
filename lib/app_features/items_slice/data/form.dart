@@ -8,17 +8,17 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
-import 'package:storepool/app_features/zi_slice/zata/controller.dart'
-    show XxxSliceController;
 import 'package:zi_core/zi_core_io.dart';
 
-class XxxSliceForm extends StatefulWidget with ZiFormMixin {
-  final XxxSliceController ctrl;
+import '../a_items_slice_io.dart';
+
+class ItemsSliceForm extends StatefulWidget with ZiFormMixin {
+  final ItemsSliceController ctrl;
 
   final Future<bool> Function(String name)? onSubmit;
   final Future<bool> Function(String uuid, String name)? onUpdate;
 
-  const XxxSliceForm(this.ctrl, {super.key, this.onSubmit, this.onUpdate});
+  const ItemsSliceForm(this.ctrl, {super.key, this.onSubmit, this.onUpdate});
 
   @override
   ValueNotifier<bool> get hasChanges => ctrl.hasChangesNotifier;
@@ -30,11 +30,11 @@ class XxxSliceForm extends StatefulWidget with ZiFormMixin {
   VoidCallback? get onClose => ctrl.dispose;
 
   @override
-  State<XxxSliceForm> createState() => _XxxSliceFormState();
+  State<ItemsSliceForm> createState() => _ItemsSliceFormState();
 }
 
-class _XxxSliceFormState extends State<XxxSliceForm> {
-  XxxSliceController get ctrl => widget.ctrl;
+class _ItemsSliceFormState extends State<ItemsSliceForm> {
+  ItemsSliceController get ctrl => widget.ctrl;
 
   void _onChange() {
     setState(() {});

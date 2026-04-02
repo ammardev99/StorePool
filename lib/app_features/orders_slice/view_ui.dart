@@ -6,16 +6,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:zi_core/zi_core_io.dart';
-import 'z_slice_io.dart';
+import 'orders_slice_io.dart';
 
-class XxxSliceView extends StatefulWidget {
-  const XxxSliceView({super.key});
+class OrdersSliceView extends StatefulWidget {
+  const OrdersSliceView({super.key});
 
   @override
-  State<XxxSliceView> createState() => _XxxSliceViewState();
+  State<OrdersSliceView> createState() => _OrdersSliceViewState();
 }
 
-class _XxxSliceViewState extends State<XxxSliceView> {
+class _OrdersSliceViewState extends State<OrdersSliceView> {
   List<dynamic> items = [];
 
   @override
@@ -42,7 +42,7 @@ class _XxxSliceViewState extends State<XxxSliceView> {
         itemCount: items.length,
         itemBuilder: (_, i) {
           final item = items[i];
-          return XxxSliceTile(
+          return OrdersSliceTile(
             item: item,
             onTap: () {},
             actions: XxxSliceActions(

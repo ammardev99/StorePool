@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:zi_core/zi_core_io.dart';
 import '../app_shell/app_shell_io.dart';
-import 'zi_slice/z_slice_io.dart';
+import 'categories_slice/a_categories_slice_io.dart';
+import 'dashboard_slice/a_dashboard_slice_io.dart';
+import 'items_slice/a_items_slice_io.dart';
+import 'orders_slice/orders_slice_io.dart';
 
 class NameAppView extends StatefulWidget {
   const NameAppView({super.key});
@@ -12,10 +16,36 @@ class NameAppView extends StatefulWidget {
 
 class _NameAppViewState extends State<NameAppView> {
   int pageIndex = 0;
-  List mainPavesView = [XxxSliceView(), MenuView()];
+  List mainPavesView = [
+    // Bottom bar
+    // - Dashboard,
+    DashboardSliceView(),
+    // - Categories,
+    CategoriesSliceView(),
+    // - Items,
+    ItemsSliceView(),
+
+    // - Web,
+    // - Orders,
+    OrdersSliceView(),
+    // - Menu
+    MenuView(),
+  ];
   List<TabItem> mainPages = [
-    TabItem(icon: Icons.dashboard_rounded, title: 'Slice 1'),
+//     Bottom bar
+// - Dashboard,
+    TabItem(icon: Icons.dashboard, title: 'Dashboard'),
+// - Categories,
+    TabItem(icon: Icons.category, title: 'Categories'),
+// - Items,
+    TabItem(icon: Icons.list, title: 'Items'),
+
+// - Web,
+// - Orders,
+    TabItem(icon: Icons.shopping_cart, title: 'Orders'),
+// - Menu
     TabItem(icon: Icons.menu, title: 'Menu'),
+    
   ];
 
   @override
