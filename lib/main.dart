@@ -4,7 +4,7 @@ import 'package:zi_core/zi_core_io.dart';
 
 
 void main() {
-  ziCoreInit(beta: true);
+  ziCoreInit(beta: false);
   ZiColors.override(
     ZiColorOverrides(
       primary: const Color(0xFFFF55A0),

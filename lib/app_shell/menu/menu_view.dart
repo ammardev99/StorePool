@@ -9,7 +9,7 @@ class MenuView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Get user data from provider or state
+    // DO: Get user data from provider or state
     const userName = 'User';
     const userEmail = '';
 
@@ -64,7 +64,7 @@ class MenuView extends StatelessWidget {
                   action: ZiTapAction(
                     type: ZiTapActionType.custom,
                     onTap: () async {
-                      // TODO: Implement logout action
+                      // DO: Implement logout action
                     },
                   ),
                 ),

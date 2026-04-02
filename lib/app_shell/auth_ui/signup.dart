@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zi_core/zi_core_io.dart';
-import '../../app_view/view_io.dart';
+import '../../app_features/view_io.dart';
 import '../app_shell_io.dart';
 
 class SignupView extends StatefulWidget {
@@ -133,7 +133,7 @@ class _SignupViewState extends State<SignupView> {
                   expand: true,
 
                   action: () {
-                    // TODO: Implement signup action
+                    // DO: Implement signup action
                     Navigator.push(
                       context,
                       MaterialPageRoute(

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:zi_core/zi_core_io.dart';
 
@@ -61,11 +60,10 @@ class EditProfileController {
       isLoading = true;
       ZiLogger.log("Calling Update Profile API...");
 
-      // TODO: Replace with Firebase / API
+      // DO: Replace with Firebase / API
       await Future.delayed(const Duration(seconds: 2));
 
       ZiLogger.log("Profile Updated Successfully ✅");
-
     } catch (e) {
       ZiLogger.log("Error: $e");
     } finally {

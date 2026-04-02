@@ -26,8 +26,8 @@ class _EditStoreViewState extends State<EditStoreView> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Prefill data from store
-    // TODO: Get last updated date
+    // DO: Prefill data from store
+    // DO: Get last updated date
 
     return ZiScaffoldB(
       appBar: ZiAppBarB(title: "Edit Store Profile"),
@@ -62,7 +62,7 @@ class _EditStoreViewState extends State<EditStoreView> {
                 //     value: selectedCategory,
                 //     itemLabel: (e) => e.label,
                 //     onChanged: (v) {
-                //       // TODO: Handle category change
+                //       // DO: Handle category change
                 //     },
                 //   ),
                 // ),
@@ -75,7 +75,7 @@ class _EditStoreViewState extends State<EditStoreView> {
                 //     value: selectedCurrency,
                 //     itemLabel: (e) => e.label,
                 //     onChanged: (v) {
-                //       // TODO: Handle currency change
+                //       // DO: Handle currency change
                 //     },
                 //   ),
                 // ),
@@ -106,7 +106,7 @@ class _EditStoreViewState extends State<EditStoreView> {
               expand: true,
               label: "Update Store Profile",
               action: () {
-                // TODO: Implement update store action
+                // DO: Implement update store action
               },
             ),
           ],

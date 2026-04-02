@@ -401,11 +401,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: master
-      resolved-ref: ecd13934ecbbfa8af8a3a21c9c721d4f38261775
+      ref: "v1.0.1"
+      resolved-ref: a477c50167bd5d5e4cafa113ed15a2ff5e676f3b
       url: "https://github.com/ammardev99/zi_core.git"
     source: git
-    version: "0.1.1"
+    version: "1.0.1"
 sdks:
   dart: ">=3.8.0-0 <4.0.0"
   flutter: ">=3.29.0"

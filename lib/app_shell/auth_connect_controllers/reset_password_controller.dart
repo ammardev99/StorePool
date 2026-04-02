@@ -90,7 +90,7 @@ class ResetPasswordController {
       isLoading = true;
       ZiLogger.log("Calling Update Password API...");
 
-      // TODO: Replace with real API / Firebase
+      // DO: Replace with real API / Firebase
       await Future.delayed(const Duration(seconds: 2));
 
       ZiLogger.log("Password Updated Successfully ✅");

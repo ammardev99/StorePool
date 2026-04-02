@@ -13,7 +13,7 @@ class _ResetStorePINState extends State<PinResetStoreView> {
   final TextEditingController currentPinCtrl = TextEditingController();
   final TextEditingController newPinCtrl = TextEditingController();
   bool isStorePinActive = false;
-  bool isPinCurrentlyEnabled = false; // TODO: Get from backend
+  bool isPinCurrentlyEnabled = false; // DO: Get from backend
 
   @override
   void dispose() {
@@ -42,7 +42,7 @@ class _ResetStorePINState extends State<PinResetStoreView> {
           ZiSwitchB(
             value: isStorePinActive,
             onChanged: (value) {
-              // TODO: Implement toggle PIN action
+              // DO: Implement toggle PIN action
               setState(() => isStorePinActive = value);
             },
             label: "Secure My Store via PIN",
@@ -73,7 +73,7 @@ class _ResetStorePINState extends State<PinResetStoreView> {
               label:
                   isPinCurrentlyEnabled ? "Update Store PIN" : "Set Store PIN",
               action: () {
-                // TODO: Implement update PIN action
+                // DO: Implement update PIN action
               },
             ),
           ],

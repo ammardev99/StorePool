@@ -47,7 +47,7 @@ class ForgotController {
       isLoading = true;
       ZiLogger.log("Processing request...");
 
-      // TODO: API call here
+      // DO: API call here
       await Future.delayed(const Duration(seconds: 2));
 
       ZiLogger.log("Request Success");

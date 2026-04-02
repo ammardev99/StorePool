@@ -37,7 +37,7 @@ dependencies:
   zi_core:
     git:
       url: https://github.com/ammardev99/zi_core.git
-      ref: master
+      ref: v1.0.1
 
 dev_dependencies:
   flutter_test:

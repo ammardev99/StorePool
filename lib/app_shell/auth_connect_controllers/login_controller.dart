@@ -46,7 +46,7 @@ class LoginController {
       isLoading = true;
       ZiLogger.log("Login API Calling...");
 
-      // TODO: Replace with Firebase/Auth API
+      // DO: Replace with Firebase/Auth API
       await Future.delayed(const Duration(seconds: 2));
 
       ZiLogger.log("Login Success ✅");

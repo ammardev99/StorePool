@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zi_core/zi_core_io.dart';
-
-import '../app_features/zi_slice/z_slice_io.dart';
 import '../app_shell/app_shell_io.dart';
+import 'zi_slice/z_slice_io.dart';
 
 class StorePoolAppView extends StatefulWidget {
   const StorePoolAppView({super.key});
@@ -13,16 +12,8 @@ class StorePoolAppView extends StatefulWidget {
 
 class _StorePoolAppViewState extends State<StorePoolAppView> {
   int pageIndex = 0;
-  List mainPavesView = [
-    
-    
-    XxxSliceView(),
-    MenuView(),
-    
-    ];
+  List mainPavesView = [XxxSliceView(), MenuView()];
   List<TabItem> mainPages = [
-    TabItem(icon: Icons.dashboard_rounded, title: 'Dashboard'),
-    TabItem(icon: Icons.dashboard_rounded, title: 'D2'),
     TabItem(icon: Icons.dashboard_rounded, title: 'Slice 1'),
     TabItem(icon: Icons.menu, title: 'Menu'),
   ];
