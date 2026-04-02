@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:storepool/app_view/storepool_app.dart';
+
 import 'package:zi_core/zi_core_io.dart';
 
+import 'app_features/view_io.dart';
 
 void main() {
   ziCoreInit(beta: false);
@@ -44,7 +45,7 @@ class MyApp extends StatelessWidget {
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       // home: ZiSplashScreen(),
-      home: StorePoolAppView(),
+      home: NameAppView(),
     );
   }
 }
