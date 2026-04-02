@@ -1,10 +1,12 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:storepool/firebase_options.dart';
 
 import 'package:zi_core/zi_core_io.dart';
 
 import 'app_features/view_io.dart';
 
-void main() {
+Future<void> main() async {
   ziCoreInit(beta: false);
   ZiColors.override(
     ZiColorOverrides(
@@ -13,6 +15,17 @@ void main() {
       tertiary: const Color(0xFF55FF55),
     ),
   );
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    debugPrint('✔ Firebase connected successfully');
+  } catch (e, stackTrace) {
+    debugPrint('❌ Firebase connection failed');
+    debugPrint('Error: $e');
+    debugPrint('StackTrace: $stackTrace');
+  }
   runApp(const MyApp());
 }
 

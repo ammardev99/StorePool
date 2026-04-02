@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "630194290251",
+    "project_id": "storepool-zi3",
+    "storage_bucket": "storepool-zi3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:630194290251:android:ce772d2feaec6d2fe957ce",
+        "android_client_info": {
+          "package_name": "com.example.storepool"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAC6qkVbLpfFcbgL9RGn--fMaLPzMaXoHo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
