@@ -69,6 +69,7 @@ class StoreMenuView extends StatelessWidget {
                   ),
 
                 // ── store menu ────────────────────────────────────────────
+                // ignore: dead_code
                 if (hasStore) ...[
                   ZiMenuTile1(
                     icon: Icons.store_mall_directory_rounded,
@@ -106,6 +107,7 @@ class StoreMenuView extends StatelessWidget {
                 ),
 
                 // ── danger zone ───────────────────────────────────────────
+                // ignore: dead_code
                 if (hasStore) ...[
                   ZiMenuTile1(
                     icon: Icons.delete,

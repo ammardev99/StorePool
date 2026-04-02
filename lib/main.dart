@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:storepool/app_view/storepool_app.dart';
 import 'package:zi_core/zi_core_io.dart';
 
-import 'app_shell/app_shell_io.dart';
 
 void main() {
   ziCoreInit(beta: true);

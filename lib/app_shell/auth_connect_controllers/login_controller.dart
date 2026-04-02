@@ -1,6 +1,4 @@
-<<<<<<< HEAD
 
-=======
 import 'package:flutter/material.dart';
 import 'package:zi_core/zi_core_io.dart';
 
@@ -59,4 +57,3 @@ class LoginController {
     }
   }
 }
->>>>>>> 3a7689da405ec59c22699157bbf36ba823175c23

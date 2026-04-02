@@ -131,7 +131,7 @@ class _SignupViewState extends State<SignupView> {
                 ZiButtonB(
                   label: controller.isLoading ? "Signing up..." : "Signup",
                   expand: true,
-<<<<<<< HEAD
+
                   action: () {
                     // TODO: Implement signup action
                     Navigator.push(
@@ -141,24 +141,6 @@ class _SignupViewState extends State<SignupView> {
                       ),
                     );
                   },
-=======
-                  action:
-                      controller.isValid
-                          ? () async {
-                            final success = await controller.onSignup();
-                            setState(() {});
-
-                            if (success) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const NameAppView(),
-                                ),
-                              );
-                            }
-                          }
-                          : null,
->>>>>>> 3a7689da405ec59c22699157bbf36ba823175c23
                 ),
               ],
             ),
