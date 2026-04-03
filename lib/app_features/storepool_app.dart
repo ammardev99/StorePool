@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:storepool/app_features/order_history_slice/view_ui.dart';
 
 import 'package:zi_core/zi_core_io.dart';
 import '../app_shell/app_shell_io.dart';
 import 'categories_slice/a_categories_slice_io.dart';
 import 'dashboard_slice/a_dashboard_slice_io.dart';
 import 'items_slice/a_items_slice_io.dart';
-import 'orders_slice/orders_slice_io.dart';
 
-class NameAppView extends StatefulWidget {
-  const NameAppView({super.key});
+class StorePoolAppView extends StatefulWidget {
+  const StorePoolAppView({super.key});
 
   @override
-  State<NameAppView> createState() => _NameAppViewState();
+  State<StorePoolAppView> createState() => _StorePoolAppViewState();
 }
 
-class _NameAppViewState extends State<NameAppView> {
+class _StorePoolAppViewState extends State<StorePoolAppView> {
   int pageIndex = 0;
   List mainPavesView = [
     // Bottom bar
@@ -27,25 +27,25 @@ class _NameAppViewState extends State<NameAppView> {
 
     // - Web,
     // - Orders,
-    OrdersSliceView(),
+    // OrdersSliceView(),
+    OrderHistorySliceView(),
     // - Menu
     MenuView(),
   ];
   List<TabItem> mainPages = [
-//     Bottom bar
-// - Dashboard,
+    //     Bottom bar
+    // - Dashboard,
     TabItem(icon: Icons.dashboard, title: 'Dashboard'),
-// - Categories,
+    // - Categories,
     TabItem(icon: Icons.category, title: 'Categories'),
-// - Items,
+    // - Items,
     TabItem(icon: Icons.list, title: 'Items'),
 
-// - Web,
-// - Orders,
+    // - Web,
+    // - Orders,
     TabItem(icon: Icons.shopping_cart, title: 'Orders'),
-// - Menu
+    // - Menu
     TabItem(icon: Icons.menu, title: 'Menu'),
-    
   ];
 
   @override

@@ -88,12 +88,12 @@ final List<MenuModel> menuList = [
   //   action: ZiTapAction(type: ZiTapActionType.custom),
   // ),
 
-  // MenuModel(
-  //   prefix: Icons.support_agent_rounded,
-  //   label: 'Help & Support',
-  //   group: MenuGroup.support,
-  //   action: ZiTapAction(type: ZiTapActionType.openPage, page: TestShell()),
-  // ),
+  MenuModel(
+    prefix: Icons.warning,
+    label: 'sand box',
+    group: MenuGroup.support,
+    action: ZiTapAction(type: ZiTapActionType.openPage, page: TestShell()),
+  ),
 
   // --------------App Shell--------------//
   // About App

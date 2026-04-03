@@ -38,40 +38,63 @@ class _ItemsSliceViewState extends State<ItemsSliceView> {
   @override
   Widget build(BuildContext context) {
     return ZiScaffoldB(
-      body: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (_, i) {
-          final item = items[i];
-          return ItemsSliceTile(
-            item: item,
-            onTap: () {},
-            actions: ItemsSliceActions(
-              item: item,
-              onReload: _load,
-              onDelete: _delete,
-            ),
+      body: ItemsSliceTile(
+  item: {
+    'title': 'Hair Cutting',
+    'categoryName': 'Salon Services',
+    'price': 500,
+    'id': 1,
+    'isActive': true,
+  },
+  onTap: () {
+    debugPrint("Service tapped");
+  },
+  actions: IconButton(
+    icon: const Icon(Icons.more_vert),
+    onPressed: () {
+      debugPrint("Action clicked");
+    },
+  ),
+),
+      // ListView.builder(
+      //   itemCount: items.length,
+      //   itemBuilder: (_, i) {
+      //     final item = items[i];
+      //     return ItemsSliceTile(
+      //       item: item,
+      //       onTap: () {},
+      //       actions: ItemsSliceActions(
+      //         item: item,
+      //         onReload: _load,
+      //         onDelete: _delete,
+      //       ),
+      //     );
+      //   },
+      // ),
+     floatingActionButton: ZiFABIconBtn(
+  onTap: () async {
+    final ctrl = ItemsSliceController();
+
+    final result = await ziFormView(
+      context,
+      title: 'Add Item',
+      form: ItemsSliceForm(
+        ctrl,
+        onSubmit: (name, category, type, price, active) async {
+          // 🔹 Here you can call your API or backend to create the item
+          ZiLogger.log(
+            "Create Item → Name: $name, Category: $category, Type: $type, Price: $price, Active: $active",
           );
+
+          // Simulate successful save
+          return true;
         },
       ),
-      floatingActionButton: ZiFABIconBtn(
-        onTap: () async {
-          final ctrl = ItemsSliceController();
+    );
 
-          final result = await ziFormView(
-            context,
-            title: 'Add Item',
-            form: ItemsSliceForm(
-              ctrl,
-              onSubmit: (name) async {
-                ZiLogger.log("Create: $name");
-                return true;
-              },
-            ),
-          );
-
-          if (result == true) _load();
-        },
-      ),
+    if (result == true) _load(); // reload your list after successful creation
+  },
+),
     );
   }
 }

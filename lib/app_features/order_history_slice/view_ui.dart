@@ -38,21 +38,39 @@ class _OrderHistorySliceViewState extends State<OrderHistorySliceView> {
   @override
   Widget build(BuildContext context) {
     return ZiScaffoldB(
-      body: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (_, i) {
-          final item = items[i];
-          return OrderHistorySliceTile(
-            item: item,
-            onTap: () {},
-            actions: XxxSliceActions(
-              item: item,
-              onReload: _load,
-              onDelete: _delete,
-            ),
-          );
-        },
-      ),
+      body: OrderHistorySliceTile(
+  item: {
+    'orderNumber': '#ORD-001',
+    'itemCount': 3,
+    'dateTime': '03 Apr 2026, 2:30 PM',
+    'amount': 2500,
+    'currencySign': 'Rs.'
+  },
+  onTap: () {
+    debugPrint("Order tapped");
+  },
+  actions: IconButton(
+    icon: const Icon(Icons.more_vert),
+    onPressed: () {
+      debugPrint("Order action clicked");
+    },
+  ),
+),
+      // ListView.builder(
+      //   itemCount: items.length,
+      //   itemBuilder: (_, i) {
+      //     final item = items[i];
+      //     return OrderHistorySliceTile(
+      //       item: item,
+      //       onTap: () {},
+      //       actions: XxxSliceActions(
+      //         item: item,
+      //         onReload: _load,
+      //         onDelete: _delete,
+      //       ),
+      //     );
+      //   },
+      // ),
       floatingActionButton: ZiFABIconBtn(
         onTap: () async {
           final ctrl = XxxSliceController();

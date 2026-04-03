@@ -9,10 +9,10 @@
 import 'package:flutter/material.dart';
 import 'package:zi_core/zi_core_io.dart';
 
-class XxxSliceController {
+class CategoriesSliceController {
   ZiFormMode formMode;
 
-  XxxSliceController({this.formMode = ZiFormMode.add}) {
+  CategoriesSliceController({this.formMode = ZiFormMode.add}) {
     _update();
   }
 
@@ -20,6 +20,9 @@ class XxxSliceController {
 
   // Fields
   final nameCtrl = TextEditingController();
+  String type = 'product'; // default value
+  final sortCtrl = TextEditingController();
+  bool isActive = true;
 
   // State
   final canSaveNotifier = ValueNotifier<bool>(false);
@@ -29,6 +32,9 @@ class XxxSliceController {
 
   // Originals
   String _origName = '';
+  String _origType = '';
+  String _origSort = '';
+  bool _origActive = true;
 
   bool get isAdd => formMode == ZiFormMode.add;
   bool get isEdit => formMode == ZiFormMode.edit;
@@ -38,10 +44,14 @@ class XxxSliceController {
 
   // Validation
   bool get _canSave =>
-      isAdd ? nameCtrl.text.trim().isNotEmpty : _hasChanges;
+      nameCtrl.text.trim().isNotEmpty &&
+      (isAdd ? true : _hasChanges);
 
   bool get _hasChanges =>
-      nameCtrl.text.trim() != _origName;
+      nameCtrl.text.trim() != _origName ||
+      type != _origType ||
+      sortCtrl.text.trim() != _origSort ||
+      isActive != _origActive;
 
   void notify() => _update();
 
@@ -55,28 +65,37 @@ class XxxSliceController {
     existingUuid = data.uuid;
 
     nameCtrl.text = data.name ?? '';
+    type = data.type ?? 'product';
+    sortCtrl.text = data.sortOrder?.toString() ?? '';
+    isActive = data.isActive ?? true;
+
     _origName = nameCtrl.text;
+    _origType = type;
+    _origSort = sortCtrl.text;
+    _origActive = isActive;
 
     _update();
   }
 
   // Submit
-  Future<bool> submit(Future<bool> Function(String name)? onSubmit) async {
+  Future<bool> submit(Future<bool> Function(String name, String type, int sort, bool active)? onSubmit) async {
     if (!formKey.currentState!.validate()) return false;
+    final sortValue = int.tryParse(sortCtrl.text.trim()) ?? 0;
 
     if (onSubmit != null) {
-      return await onSubmit(nameCtrl.text.trim());
+      return await onSubmit(nameCtrl.text.trim(), type, sortValue, isActive);
     }
 
     return false;
   }
 
   // Update
-  Future<bool> update(Future<bool> Function(String uuid, String name)? onUpdate) async {
+  Future<bool> update(Future<bool> Function(String uuid, String name, String type, int sort, bool active)? onUpdate) async {
     if (!formKey.currentState!.validate()) return false;
+    final sortValue = int.tryParse(sortCtrl.text.trim()) ?? 0;
 
     if (onUpdate != null && existingUuid != null) {
-      return await onUpdate(existingUuid!, nameCtrl.text.trim());
+      return await onUpdate(existingUuid!, nameCtrl.text.trim(), type, sortValue, isActive);
     }
 
     return false;
@@ -84,6 +103,7 @@ class XxxSliceController {
 
   void dispose() {
     nameCtrl.dispose();
+    sortCtrl.dispose();
     canSaveNotifier.dispose();
     hasChangesNotifier.dispose();
   }

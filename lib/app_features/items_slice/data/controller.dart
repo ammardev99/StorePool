@@ -20,6 +20,14 @@ class ItemsSliceController {
 
   // Fields
   final nameCtrl = TextEditingController();
+  final priceCtrl = TextEditingController();
+  String? category;
+  String? type;
+  bool active = true;
+
+  // Dummy options
+  final categories = ['Electronics', 'Furniture', 'Clothing'];
+  final types = ['Product', 'Service'];
 
   // State
   final canSaveNotifier = ValueNotifier<bool>(false);
@@ -29,6 +37,9 @@ class ItemsSliceController {
 
   // Originals
   String _origName = '';
+  String? _origCategory;
+  String? _origType;
+  bool _origActive = true;
 
   bool get isAdd => formMode == ZiFormMode.add;
   bool get isEdit => formMode == ZiFormMode.edit;
@@ -37,9 +48,17 @@ class ItemsSliceController {
   String get actionLabel => isEdit ? 'Update' : 'Save';
 
   // Validation
-  bool get _canSave => isAdd ? nameCtrl.text.trim().isNotEmpty : _hasChanges;
+  bool get _canSave =>
+      nameCtrl.text.trim().isNotEmpty &&
+      category != null &&
+      type != null &&
+      priceCtrl.text.trim().isNotEmpty;
 
-  bool get _hasChanges => nameCtrl.text.trim() != _origName;
+  bool get _hasChanges =>
+      nameCtrl.text.trim() != _origName ||
+      category != _origCategory ||
+      type != _origType ||
+      active != _origActive;
 
   void notify() => _update();
 
@@ -53,17 +72,32 @@ class ItemsSliceController {
     existingUuid = data.uuid;
 
     nameCtrl.text = data.name ?? '';
+    priceCtrl.text = data.price?.toString() ?? '';
+    category = data.category;
+    type = data.type;
+    active = data.active ?? true;
+
     _origName = nameCtrl.text;
+    _origCategory = category;
+    _origType = type;
+    _origActive = active;
 
     _update();
   }
 
   // Submit
-  Future<bool> submit(Future<bool> Function(String name)? onSubmit) async {
+  Future<bool> submit(Future<bool> Function(String name, String category, String type,
+      double price, bool active)? onSubmit) async {
     if (!formKey.currentState!.validate()) return false;
 
     if (onSubmit != null) {
-      return await onSubmit(nameCtrl.text.trim());
+      return await onSubmit(
+        nameCtrl.text.trim(),
+        category!,
+        type!,
+        double.tryParse(priceCtrl.text.trim()) ?? 0,
+        active,
+      );
     }
 
     return false;
@@ -71,12 +105,20 @@ class ItemsSliceController {
 
   // Update
   Future<bool> update(
-    Future<bool> Function(String uuid, String name)? onUpdate,
-  ) async {
+      Future<bool> Function(String uuid, String name, String category, String type,
+              double price, bool active)?
+          onUpdate) async {
     if (!formKey.currentState!.validate()) return false;
 
     if (onUpdate != null && existingUuid != null) {
-      return await onUpdate(existingUuid!, nameCtrl.text.trim());
+      return await onUpdate(
+        existingUuid!,
+        nameCtrl.text.trim(),
+        category!,
+        type!,
+        double.tryParse(priceCtrl.text.trim()) ?? 0,
+        active,
+      );
     }
 
     return false;
@@ -84,6 +126,7 @@ class ItemsSliceController {
 
   void dispose() {
     nameCtrl.dispose();
+    priceCtrl.dispose();
     canSaveNotifier.dispose();
     hasChangesNotifier.dispose();
   }

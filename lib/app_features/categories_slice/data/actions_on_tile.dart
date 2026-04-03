@@ -35,13 +35,13 @@ class XxxSliceActions extends StatelessWidget {
           icon: Icons.visibility_rounded,
           label: 'View',
           onTap: () {
-            final ctrl = XxxSliceController(formMode: ZiFormMode.view)
+            final ctrl = CategoriesSliceController(formMode: ZiFormMode.view)
               ..prefill(item);
             ziFormView(
               context,
               type: ZiFormViewType.page,
               title: 'Details',
-              form: XxxSliceForm(ctrl),
+              form: CategoriesSliceForm(ctrl),
             );
           },
         ),
@@ -51,14 +51,14 @@ class XxxSliceActions extends StatelessWidget {
           icon: Icons.edit_rounded,
           label: 'Edit',
           onTap: () async {
-            final ctrl = XxxSliceController(formMode: ZiFormMode.edit)
+            final ctrl = CategoriesSliceController(formMode: ZiFormMode.edit)
               ..prefill(item);
 
             final result = await ziFormView(
               context,
               type: ZiFormViewType.page,
               title: 'Edit',
-              form: XxxSliceForm(ctrl),
+              form: CategoriesSliceForm(ctrl),
             );
             if (result == true && onReload != null) {
               await onReload!();

@@ -6,7 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:zi_core/zi_core_io.dart';
-import 'a_dashboard_slice_io.dart';
+import '../../widgets/analytics_card.dart';
 
 class DashboardSliceView extends StatefulWidget {
   const DashboardSliceView({super.key});
@@ -30,6 +30,7 @@ class _DashboardSliceViewState extends State<DashboardSliceView> {
     setState(() {});
   }
 
+  // ignore: unused_element
   Future<void> _delete(String uuid) async {
     ZiLogger.log("Delete: $uuid");
     // DO: delete API
@@ -38,40 +39,127 @@ class _DashboardSliceViewState extends State<DashboardSliceView> {
   @override
   Widget build(BuildContext context) {
     return ZiScaffoldB(
-      body: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (_, i) {
-          final item = items[i];
-          return DashboardSliceTile(
-            item: item,
-            onTap: () {},
-            actions: XxxSliceActions(
-              item: item,
-              onReload: _load,
-              onDelete: _delete,
-            ),
-          );
-        },
-      ),
-      floatingActionButton: ZiFABIconBtn(
-        onTap: () async {
-          final ctrl = XxxSliceController();
+      body:Padding(
+  padding: const EdgeInsets.all(15),
+  child: Builder(
+    builder: (context) {
+      // 🔹 Dummy state
+      final bool isLoading = false;
+      final String? error = null;
 
-          final result = await ziFormView(
-            context,
-            title: 'Add Item',
-            form: XxxSliceForm(
-              ctrl,
-              onSubmit: (name) async {
-                ZiLogger.log("Create: $name");
-                return true;
-              },
-            ),
-          );
+      // 🔹 Dummy data
+      final totalProjects = 12;
+      final totalPhases = 8;
+      final totalTasks = 45;
+      final completedTasks = 30;
+      final pendingTasks = 15;
 
-          if (result == true) _load();
-        },
-      ),
+      // ignore: dead_code
+      if (isLoading) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      if (error != null) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Error: $error'),
+              ziGap(10),
+              ZiButtonB(
+                label: "Retry",
+                action: () {
+                  debugPrint("Retry clicked");
+                },
+              ),
+            ],
+          ),
+        );
+      }
+
+      return Column(
+        children: [
+          // ✅ Header
+          Hero(
+            tag: 'dashboard-hero',
+            child: Text('Dashboard', style: ZiTypoStyles.titleLg.copyWith(
+              color: ZiColors.primary,
+              fontWeight: FontWeight.bold,
+            )),
+          ),
+          ziGap(10),
+
+          // ✅ Dashboard title
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Dashboard', style: ZiTypoStyles.titleMd),
+              IconButton(
+                onPressed: () {
+                  debugPrint("Refresh clicked");
+                },
+                icon: Icon(
+                  Icons.refresh_rounded,
+                  color: ZiColors.grayLight,
+                ),
+                tooltip: 'Refresh Analytics',
+              ),
+            ],
+          ),
+
+          ziGap(10),
+
+          // ✅ Analytics Row 1
+          Row(
+            children: [
+              AnalyticsCard(
+                label: "Projects",
+                count: "$totalProjects",
+              ),
+              ziGap(10),
+              AnalyticsCard(
+                label: "Phases",
+                count: "$totalPhases",
+              ),
+            ],
+          ),
+
+          ziGap(10),
+
+          // ✅ Analytics Row 2
+          Row(
+            children: [
+              AnalyticsCard(
+                label: "All Tasks",
+                count: "$totalTasks",
+              ),
+              ziGap(10),
+              AnalyticsCard(
+                backgroundColor: ZiColors.gainG,
+                                labelColor: Colors.white,
+
+                label: "Complete",
+                count: "$completedTasks",
+              ),
+              ziGap(10),
+              AnalyticsCard(
+                backgroundColor: ZiColors.lossR,
+                labelColor: Colors.white,
+                label: "Pending",
+                count: "$pendingTasks",
+              ),
+            ],
+          ),
+
+          ziGap(10),
+
+          const Spacer(),
+        ],
+      );
+    },
+  ),
+),
+      
     );
   }
 }

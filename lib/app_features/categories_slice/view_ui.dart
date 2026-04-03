@@ -26,13 +26,13 @@ class _CategoriesSliceViewState extends State<CategoriesSliceView> {
 
   Future<void> _load() async {
     ZiLogger.log("Loading items...");
-    // DO: fetch from API
+    // TODO: fetch from API
     setState(() {});
   }
 
   Future<void> _delete(String uuid) async {
     ZiLogger.log("Delete: $uuid");
-    // DO: delete API
+    // TODO: delete via API
   }
 
   @override
@@ -44,7 +44,25 @@ class _CategoriesSliceViewState extends State<CategoriesSliceView> {
           final item = items[i];
           return CategoriesSliceTile(
             item: item,
-            onTap: () {},
+            onTap: () async {
+              // Edit flow
+              final ctrl = CategoriesSliceController();
+              ctrl.prefill(item);
+
+              final result = await ziFormView(
+                context,
+                title: 'Edit Category',
+                form: CategoriesSliceForm(
+                  ctrl,
+                  onUpdate: (uuid, name, type, sort, active) async {
+                    ZiLogger.log("Update: $uuid → $name ($type, $sort, $active)");
+                    return true;
+                  },
+                ),
+              );
+
+              if (result == true) _load();
+            },
             actions: XxxSliceActions(
               item: item,
               onReload: _load,
@@ -55,15 +73,16 @@ class _CategoriesSliceViewState extends State<CategoriesSliceView> {
       ),
       floatingActionButton: ZiFABIconBtn(
         onTap: () async {
-          final ctrl = XxxSliceController();
+          // Add new category
+          final ctrl = CategoriesSliceController();
 
           final result = await ziFormView(
             context,
-            title: 'Add Item',
-            form: XxxSliceForm(
+            title: 'Add Category',
+            form: CategoriesSliceForm(
               ctrl,
-              onSubmit: (name) async {
-                ZiLogger.log("Create: $name");
+              onSubmit: (name, type, sort, active) async {
+                ZiLogger.log("Create: $name ($type, $sort, $active)");
                 return true;
               },
             ),
