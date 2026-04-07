@@ -14,6 +14,11 @@ class ResetPasswordController {
   bool isUpdateSecurityQA = false;
   bool isLoading = false;
 
+  // INIT
+  ResetPasswordController() {
+    ZiLogger.log("ResetPasswordController initialized ✅");
+  }
+
   void dispose() {
     currentPassCtrl.dispose();
     newPassCtrl.dispose();
@@ -31,25 +36,35 @@ class ResetPasswordController {
 
   bool get isPasswordValid => newPass.length >= 6;
   bool get isPasswordMatch => newPass == confirmPass;
-  bool get isSecurityValid => !isUpdateSecurityQA || (secQuestion.isNotEmpty && secAnswer.isNotEmpty);
 
-  bool get isValid => currentPass.isNotEmpty && isPasswordValid && isPasswordMatch && isSecurityValid;
+  bool get isSecurityValid =>
+      !isUpdateSecurityQA ||
+      (secQuestion.isNotEmpty && secAnswer.isNotEmpty);
+
+  bool get isValid =>
+      currentPass.isNotEmpty &&
+      isPasswordValid &&
+      isPasswordMatch &&
+      isSecurityValid;
 
   void toggleSecurityQA(bool value) {
     isUpdateSecurityQA = value;
-    ZiLogger.log("Security QA Toggle: $value");
+    ZiLogger.log("Security QA Toggle → $value");
   }
 
   Future<bool> onSubmit() async {
-    ZiLogger.log("Reset Password Clicked → Current: $currentPass, New: $newPass");
+    ZiLogger.log(
+        "Reset Password Clicked → Current: $currentPass, New: $newPass");
 
     if (!isValid) {
-      ZiLogger.log("Validation Failed ❌ → currentPass: $currentPass, newPass: $newPass, confirmPass: $confirmPass, securityQA: $isSecurityValid");
+      ZiLogger.log(
+          "Validation Failed ❌ → currentPass: $currentPass, newPass: $newPass, confirmPass: $confirmPass, securityValid: $isSecurityValid");
       return false;
     }
 
     try {
       isLoading = true;
+
       final result = await _authService.resetPassword(
         currentPassword: currentPass,
         newPassword: newPass,
@@ -57,8 +72,15 @@ class ResetPasswordController {
         secQuestion: secQuestion,
         secAnswer: secAnswer,
       );
-      ZiLogger.log(result ? "Password Updated ✅" : "Password Update Failed ❌");
+
+      ZiLogger.log(result
+          ? "Password Updated Successfully ✅"
+          : "Password Update Failed ❌");
+
       return result;
+    } catch (e) {
+      ZiLogger.log("Reset Password Exception ❌ → $e");
+      return false;
     } finally {
       isLoading = false;
     }

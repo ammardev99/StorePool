@@ -45,6 +45,8 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
               variant: ZiInputVariant.stacked,
               type: ZiInputType.password,
               controller: controller.currentPassCtrl,
+                onChanged: (_) => setState(() {}), // ✅ ADD THIS
+
             ),
 
             ziGap(16),
@@ -89,28 +91,46 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                 label: "Security Question",
                 variant: ZiInputVariant.stacked,
                 controller: controller.secQuestionCtrl,
+                  onChanged: (_) => setState(() {}), // ✅ ADD
+
               ),
               ziGap(16),
               ZiInput(
                 label: "Secure Answer",
                 variant: ZiInputVariant.stacked,
                 controller: controller.secAnswerCtrl,
+                  onChanged: (_) => setState(() {}), // ✅ ADD
+
               ),
             ],
 
             ziGap(16),
 
-            ZiButtonB(
-              expand: true,
-              label: controller.isLoading ? "Updating..." : "Update Password",
-              action:
-                  controller.isValid
-                      ? () async {
-                        await controller.onSubmit();
-                        setState(() {});
-                      }
-                      : null,
-            ),
+           ZiButtonB(
+  expand: true,
+  label: controller.isLoading ? "Updating..." : "Update Password",
+  action: controller.isValid
+      ? () async {
+          setState(() {}); // refresh for loading
+
+          final success = await controller.onSubmit();
+
+          setState(() {}); // stop loading
+
+          if (success) {
+            ZiLogger.log("Navigate to Login ✅");
+
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginView(),
+              ),
+              (route) => false,
+            );
+          }
+        }
+      : null,
+),
           ],
         ),
       ),

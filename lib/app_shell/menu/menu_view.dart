@@ -167,18 +167,30 @@ class _MenuViewState extends State<MenuView> {
                     padding: const EdgeInsets.all(0),
                     children: [
                       buildGroupedMenu(context, showGroupTitle: false),
-                      ZiMenuTile1(
-                        icon: Icons.power_settings_new_rounded,
-                        iconPrefixColor: Colors.red,
-                        label: "Logout",
-                        action: ZiTapAction(
-                          type: ZiTapActionType.custom,
-                          onTap: () async {
-                            await _authService.logout();
-                            // Navigate to login or initial page
-                          },
-                        ),
-                      ),
+                     ZiMenuTile1(
+  icon: Icons.power_settings_new_rounded,
+  iconPrefixColor: Colors.red,
+  label: "Logout",
+  action: ZiTapAction(
+    type: ZiTapActionType.custom,
+    onTap: () async {
+      ZiLogger.log("Logout Button Clicked 🔴");
+
+      await _authService.logout();
+
+      ZiLogger.log("User Logged Out ✅");
+
+      Navigator.pushAndRemoveUntil(
+        // ignore: use_build_context_synchronously
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ZAppGateView(),
+        ),
+        (route) => false,
+      );
+    },
+  ),
+),
                     ],
                   ),
                 ),

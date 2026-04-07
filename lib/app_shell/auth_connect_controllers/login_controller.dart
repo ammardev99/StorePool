@@ -10,6 +10,11 @@ class LoginController {
 
   bool isLoading = false;
 
+  // INIT
+  LoginController() {
+    ZiLogger.log("LoginController initialized ✅");
+  }
+
   void dispose() {
     emailCtrl.dispose();
     passwordCtrl.dispose();
@@ -26,15 +31,28 @@ class LoginController {
     ZiLogger.log("Login Button Clicked → Email: $email");
 
     if (!isValid || !isEmailValid) {
-      ZiLogger.log("Validation Failed ❌ → email: $email, password: ${password.isNotEmpty}");
+      ZiLogger.log(
+        "Validation Failed ❌ → email: $email, passwordEmpty: ${password.isEmpty}",
+      );
       return false;
     }
 
     try {
       isLoading = true;
-      final result = await _authService.loginUser(email: email, password: password);
-      ZiLogger.log(result ? "Login Success ✅" : "Login Failed ❌");
+
+      final result = await _authService.loginUser(
+        email: email,
+        password: password,
+      );
+
+      ZiLogger.log(result
+          ? "Login Success ✅ UID: ${_authService.currentUser?.uid}"
+          : "Login Failed ❌");
+
       return result;
+    } catch (e) {
+      ZiLogger.log("Login Exception ❌ → $e");
+      return false;
     } finally {
       isLoading = false;
     }

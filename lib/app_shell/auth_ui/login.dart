@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storepool/app_features/view_io.dart';
 import 'package:zi_core/zi_core_io.dart';
 import '../app_shell_io.dart';
 
@@ -85,17 +86,32 @@ class _LoginViewState extends State<LoginView> {
 
                 ziGap(10),
 
-                ZiButtonB(
-                  label: controller.isLoading ? "Logging in..." : "Login",
-                  expand: true,
-                  action:
-                      controller.isValid
-                          ? () async {
-                            await controller.onLogin();
-                            setState(() {});
-                          }
-                          : null,
-                ),
+               ZiButtonB(
+  label: controller.isLoading ? "Logging in..." : "Login",
+  expand: true,
+  action: controller.isValid
+      ? () async {
+          final result = await controller.onLogin();
+
+          setState(() {});
+
+          if (result) {
+            ZiLogger.log("Navigate to Dashboard ✅");
+
+            Navigator.pushAndRemoveUntil(
+              // ignore: use_build_context_synchronously
+              context,
+              MaterialPageRoute(
+                builder: (context) => const StorePoolAppView(),
+              ),
+              (route) => false,
+            );
+          } else {
+            ZiLogger.log("Login Failed ❌");
+          }
+        }
+      : null,
+),
               ],
             ),
           ),

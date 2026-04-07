@@ -118,6 +118,7 @@ class _ItemsSliceViewState extends State<ItemsSliceView> {
           );
 
           if (result == true)
+            // ignore: curly_braces_in_flow_control_structures
             _load(); // reload your list after successful creation
         },
       ),

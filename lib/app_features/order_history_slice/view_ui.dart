@@ -30,6 +30,7 @@ class _OrderHistorySliceViewState extends State<OrderHistorySliceView> {
     setState(() {});
   }
 
+  // ignore: unused_element
   Future<void> _delete(String uuid) async {
     ZiLogger.log("Delete: $uuid");
     // DO: delete API
