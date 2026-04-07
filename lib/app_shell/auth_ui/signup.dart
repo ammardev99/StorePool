@@ -11,11 +11,19 @@ class SignupView extends StatefulWidget {
 }
 
 class _SignupViewState extends State<SignupView> {
-  final controller = SignupController();
+   late final SignupController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = SignupController();
+    ZiLogger.log("SignupView: Controller Created ✅");
+  }
 
   @override
   void dispose() {
     controller.dispose();
+    ZiLogger.log("SignupView: Controller Disposed 🗑️");
     super.dispose();
   }
 
@@ -128,20 +136,30 @@ class _SignupViewState extends State<SignupView> {
 
                 ziGap(10),
 
-                ZiButtonB(
-                  label: controller.isLoading ? "Signing up..." : "Signup",
-                  expand: true,
+               ZiButtonB(
+  label: controller.isLoading ? "Signing up..." : "Signup",
+  expand: true,
+ action: () async {
+  setState(() => controller.isLoading = true); // start loading
 
-                  action: () {
-                    // DO: Implement signup action
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => StorePoolAppView(),
-                      ),
-                    );
-                  },
-                ),
+  final success = await controller.onSignup();
+
+  if (!mounted) return;
+
+  setState(() => controller.isLoading = false); // stop loading
+
+  if (success) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => StorePoolAppView()),
+    );
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Signup failed. Check console for details.")),
+    );
+  }
+},
+),
               ],
             ),
           ),

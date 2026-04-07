@@ -1,58 +1,56 @@
-// can you give me a controler for the this page
-// you can also use this in functions
-// ZiLogger.log("msg"); // ass debug print so we can track the user actions or reponse
-// for now you can also show data in loger to when i click on submit i show my entrrred Data,
-// we also apdate the ui to link with this controllers
-
-// -------------------------
-
 import 'package:flutter/material.dart';
+import 'package:storepool/app_services/auth/auth_service.dart';
 import 'package:zi_core/zi_core_io.dart';
 
 class ForgotController {
-  // Controllers
   final TextEditingController emailCtrl = TextEditingController();
   final TextEditingController phoneCtrl = TextEditingController();
 
-  // State
+  final AuthService _authService = AuthService();
+
   bool isLoading = false;
 
-  // Dispose
   void dispose() {
     emailCtrl.dispose();
     phoneCtrl.dispose();
+    ZiLogger.log("ForgotController disposed ✅");
   }
 
-  // Validation
-  bool get isValid {
-    return emailCtrl.text.isNotEmpty || phoneCtrl.text.isNotEmpty;
-  }
+  // Validation: either email or phone must be provided
+  bool get isValid =>
+      emailCtrl.text.trim().isNotEmpty || phoneCtrl.text.trim().isNotEmpty;
 
-  // Submit Action
-  Future<void> onSubmit() async {
-    ZiLogger.log("Forgot Password Submit Clicked");
-
+  Future<bool> onSubmit() async {
     final email = emailCtrl.text.trim();
     final phone = phoneCtrl.text.trim();
 
-    ZiLogger.log("Entered Email: $email");
-    ZiLogger.log("Entered Phone: $phone");
+    ZiLogger.log("Forgot Password Clicked → Email: $email, Phone: $phone");
 
     if (!isValid) {
-      ZiLogger.log("Validation Failed: Empty Fields");
-      return;
+      ZiLogger.log("Validation Failed ❌ → email: '$email', phone: '$phone'");
+      return false;
     }
 
     try {
       isLoading = true;
-      ZiLogger.log("Processing request...");
 
-      // DO: API call here
-      await Future.delayed(const Duration(seconds: 2));
+      // If email is provided, send reset email
+      if (email.isNotEmpty) {
+        final result = await _authService.sendResetEmail(email: email);
+        ZiLogger.log(result ? "Reset Email Sent ✅" : "Reset Email Failed ❌");
+        return result;
+      }
 
-      ZiLogger.log("Request Success");
+      // Optional: handle phone-based flow if needed
+      if (phone.isNotEmpty) {
+        ZiLogger.log("Phone reset not implemented yet ❌ → phone: $phone");
+        return false;
+      }
+
+      return false;
     } catch (e) {
-      ZiLogger.log("Error: $e");
+      ZiLogger.log("Forgot Password Error: $e ❌");
+      return false;
     } finally {
       isLoading = false;
     }

@@ -39,23 +39,48 @@ class _ItemsSliceViewState extends State<ItemsSliceView> {
   Widget build(BuildContext context) {
     return ZiScaffoldB(
       body: ItemsSliceTile(
-  item: {
-    'title': 'Hair Cutting',
-    'categoryName': 'Salon Services',
-    'price': 500,
-    'id': 1,
-    'isActive': true,
-  },
-  onTap: () {
-    debugPrint("Service tapped");
-  },
-  actions: IconButton(
-    icon: const Icon(Icons.more_vert),
-    onPressed: () {
-      debugPrint("Action clicked");
-    },
-  ),
-),
+        item: {
+          'title': 'Hair Cutting',
+          'categoryName': 'Salon Services',
+          'price': 500,
+          'id': 1,
+          'isActive': true,
+        },
+        onTap: () {
+          debugPrint("Service tapped");
+        },
+        actions: IconButton(
+          onPressed: () {
+            ItemsSliceOnActions(
+              // ✅ HERE
+              item: {
+                'title': 'Hair Cutting',
+                'categoryName': 'Salon Services',
+                'price': 500,
+                'id': 1,
+                'isActive': true,
+              },
+              onReload: _load,
+              onDelete: _delete,
+            );
+          },
+          // onPressed: () {
+          //   ItemsSliceOnActions(
+          //     // ✅ HERE
+          //     item: {
+          //       'title': 'Hair Cutting',
+          //       'categoryName': 'Salon Services',
+          //       'price': 500,
+          //       'id': 1,
+          //       'isActive': true,
+          //     },
+          //     onReload: _load,
+          //     onDelete: _delete,
+          //   );
+          // },
+          icon:  Icon(Icons.more_vert_rounded, color: ZiColors.primary,),
+        ),
+      ),
       // ListView.builder(
       //   itemCount: items.length,
       //   itemBuilder: (_, i) {
@@ -71,30 +96,31 @@ class _ItemsSliceViewState extends State<ItemsSliceView> {
       //     );
       //   },
       // ),
-     floatingActionButton: ZiFABIconBtn(
-  onTap: () async {
-    final ctrl = ItemsSliceController();
+      floatingActionButton: ZiFABIconBtn(
+        onTap: () async {
+          final ctrl = ItemsSliceController();
 
-    final result = await ziFormView(
-      context,
-      title: 'Add Item',
-      form: ItemsSliceForm(
-        ctrl,
-        onSubmit: (name, category, type, price, active) async {
-          // 🔹 Here you can call your API or backend to create the item
-          ZiLogger.log(
-            "Create Item → Name: $name, Category: $category, Type: $type, Price: $price, Active: $active",
+          final result = await ziFormView(
+            context,
+            title: 'Add Item',
+            form: ItemsSliceForm(
+              ctrl,
+              onSubmit: (name, category, type, price, active) async {
+                // 🔹 Here you can call your API or backend to create the item
+                ZiLogger.log(
+                  "Create Item → Name: $name, Category: $category, Type: $type, Price: $price, Active: $active",
+                );
+
+                // Simulate successful save
+                return true;
+              },
+            ),
           );
 
-          // Simulate successful save
-          return true;
+          if (result == true)
+            _load(); // reload your list after successful creation
         },
       ),
-    );
-
-    if (result == true) _load(); // reload your list after successful creation
-  },
-),
     );
   }
 }

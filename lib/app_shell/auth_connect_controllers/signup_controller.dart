@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:storepool/app_services/auth/auth_service.dart';
 import 'package:zi_core/zi_core_io.dart';
 
 class SignupController {
-  // Controllers
+  // ─── Text Controllers ─────────────────────────────
   final nameCtrl = TextEditingController();
   final phoneCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
@@ -10,11 +11,19 @@ class SignupController {
   final secQCtrl = TextEditingController();
   final secACtrl = TextEditingController();
 
-  // State
+  // ─── Auth Service ────────────────────────────────
+  final AuthService _authService = AuthService();
+
+  // ─── State ──────────────────────────────────────
   bool agreedToTerms = false;
   bool isLoading = false;
 
-  // Dispose
+  // ─── Constructor
+  SignupController() {
+    ZiLogger.log("SignupController Initialized ✅");
+  }
+
+  // ─── Dispose
   void dispose() {
     nameCtrl.dispose();
     phoneCtrl.dispose();
@@ -22,9 +31,10 @@ class SignupController {
     passwordCtrl.dispose();
     secQCtrl.dispose();
     secACtrl.dispose();
+    ZiLogger.log("SignupController Disposed 🗑️");
   }
 
-  // Getters
+  // ─── Getters ─────────────────────────────────────
   String get name => nameCtrl.text.trim();
   String get phone => phoneCtrl.text.trim();
   String get email => emailCtrl.text.trim();
@@ -32,7 +42,6 @@ class SignupController {
   String get secQ => secQCtrl.text.trim();
   String get secA => secACtrl.text.trim();
 
-  // Validation
   bool get isEmailValid => email.contains("@");
   bool get isPasswordValid => password.length >= 6;
 
@@ -47,43 +56,46 @@ class SignupController {
         agreedToTerms;
   }
 
-  // Toggle Terms
   void toggleTerms(bool value) {
     agreedToTerms = value;
     ZiLogger.log("Terms Accepted: $value");
   }
 
-  // Submit
+  // ─── Signup Function ─────────────────────────────
   Future<bool> onSignup() async {
     ZiLogger.log("Signup Button Clicked");
 
-    ZiLogger.log("Name: $name");
-    ZiLogger.log("Phone: $phone");
-    ZiLogger.log("Email: $email");
-    ZiLogger.log("Password: $password");
-    ZiLogger.log("Security Question: $secQ");
-    ZiLogger.log("Security Answer: $secA");
-    ZiLogger.log("Agreed To Terms: $agreedToTerms");
-
     if (!isValid) {
-      ZiLogger.log("Validation Failed");
+      ZiLogger.log("Validation Failed ❌");
       return false;
     }
 
+    isLoading = true;
+
     try {
-      isLoading = true;
-      ZiLogger.log("Calling Signup API...");
+      final result = await _authService.signupUser(
+        name: name,
+        phone: phone,
+        email: email,
+        password: password,
+        secQ: secQ,
+        secA: secA,
+      );
 
-      // DO: Replace with Firebase/Auth API
-      await Future.delayed(const Duration(seconds: 2));
-
-      ZiLogger.log("Signup Success ✅");
-      return true;
-    } catch (e) {
-      ZiLogger.log("Signup Error: $e");
-      return false;
-    } finally {
       isLoading = false;
+
+      if (result) {
+        ZiLogger.log("Signup Success ✅");
+        return true;
+      } else {
+        ZiLogger.log("Signup Failed ❌: User not registered");
+        return false;
+      }
+    } catch (e, stackTrace) {
+      ZiLogger.log("Error during signup ❌: $e");
+      ZiLogger.log(stackTrace.toString());
+      isLoading = false;
+      return false;
     }
   }
 }

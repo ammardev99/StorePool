@@ -92,8 +92,9 @@ class ItemsSliceTile extends StatelessWidget {
                 ),
               ),
 
+
               /// RIGHT SIDE ACTIONS
-              actions,
+              // actions,
             ],
           ),
         ),

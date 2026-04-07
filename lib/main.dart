@@ -1,10 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:storepool/app_shell/auth_ui/onboarding/splash.dart';
+import 'package:storepool/app_shell/auth_ui/signup.dart';
 import 'package:storepool/firebase_options.dart';
 
 import 'package:zi_core/zi_core_io.dart';
 
-import 'app_features/view_io.dart';
 
 Future<void> main() async {
   ziCoreInit(beta: false);
@@ -58,7 +59,8 @@ class MyApp extends StatelessWidget {
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       // home: ZiSplashScreen(),
-      home: StorePoolAppView(),
+      home: ZiSplashScreen(),
+      // home: StorePoolAppView(),
       // home: const TestShell(),
     );
   }

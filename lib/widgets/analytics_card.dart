@@ -39,8 +39,9 @@ class AnalyticsCard extends StatelessWidget {
             color: labelColor,
           )),
           ziGap(4),
-          Text(count, style: ZiTypoStyles.noMd),
-
+          Text(count, style: ZiTypoStyles.noLg.copyWith(
+            color: countColor,
+          )),
         ],
       ),
     );

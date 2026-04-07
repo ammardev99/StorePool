@@ -6,17 +6,7 @@
 
 ## OnDemand Zi_Core Teams
 
-- in form controller path itself _io
-- zata to "data"
-- zi_slice to "aa_slice"
-- in slices zi_slice_io to "a_aa_slice_io"
-- vision -> i need "zi_core slice feature_name "
-- export all slices in view io
-- add another sandwork file
-- auto activate the sand file in menu
-- in FAB add item to "Add"
-- add dummy each field in slice
-  -----------
+
 ## new tasks
 <!- widgets we need in our project
 -card widget also called analytics cards

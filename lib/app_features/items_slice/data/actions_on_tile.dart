@@ -11,12 +11,12 @@ import 'package:zi_core/zi_core_io.dart';
 import 'controller.dart';
 import 'form.dart';
 
-class ItemsSliceActions extends StatelessWidget {
+class ItemsSliceOnActions extends StatelessWidget {
   final dynamic item;
   final Future<void> Function()? onReload;
   final Future<void> Function(String uuid)? onDelete;
 
-  const ItemsSliceActions({
+  const ItemsSliceOnActions({
     super.key,
     required this.item,
     this.onReload,
