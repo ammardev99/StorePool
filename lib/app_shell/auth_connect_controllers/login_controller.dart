@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:storepool/app_services/auth/auth_service.dart';
+import 'package:storepool/firebase_services/auth/auth_service.dart';
 import 'package:zi_core/zi_core_io.dart';
 
 class LoginController {
@@ -10,15 +10,14 @@ class LoginController {
 
   bool isLoading = false;
 
-  // INIT
   LoginController() {
-    ZiLogger.log("LoginController initialized ✅");
+    ZiLogger.log("LoginController initialized ");
   }
 
   void dispose() {
     emailCtrl.dispose();
     passwordCtrl.dispose();
-    ZiLogger.log("LoginController disposed ✅");
+    ZiLogger.log("LoginController disposed ");
   }
 
   String get email => emailCtrl.text.trim();
@@ -28,36 +27,29 @@ class LoginController {
   bool get isEmailValid => email.contains("@");
 
   Future<bool> onLogin() async {
-    isLoading = true;
     ZiLogger.log("Login Button Clicked → Email: $email");
 
     if (!isValid || !isEmailValid) {
       ZiLogger.log(
-        "Validation Failed ❌ → email: $email, passwordEmpty: ${password.isEmpty}",
+        "Validation Failed  → email: $email, passwordEmpty: ${password.isEmpty}",
       );
       return false;
     }
 
     try {
-      isLoading = true;
-
       final result = await _authService.loginUser(
         email: email,
         password: password,
       );
 
       ZiLogger.log(result
-          ? "Login Success ✅ UID: ${_authService.currentUser?.uid}"
-          : "Login Failed ❌");
-    isLoading = false;
+          ? "Login Success  UID: ${_authService.currentUser?.uid}"
+          : "Login Failed ");
 
       return result;
     } catch (e) {
-      ZiLogger.log("Login Exception ❌ → $e");
+      ZiLogger.log("Login Exception  → $e");
       return false;
-    } finally {
-      isLoading = false;
     }
-    
   }
 }

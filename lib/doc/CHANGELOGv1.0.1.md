@@ -9,6 +9,18 @@
 -only number keyboard open on the phone number
 -we can search widget by name in web package app
 - "actionLabel" set default value ziConfirmationDialogResult
+- navigation issing in store menu
+- - in form controller path itself _io
+- zata to "data"
+- zi_slice to "aa_slice"
+- in slices zi_slice_io to "a_aa_slice_io"
+- vision -> i need "zi_core slice feature_name "
+- export all slices in view io
+- add another sandwork file
+- auto activate the sand file in menu
+- in FAB add item to "Add"
+- add dummy each field in slice
+- count color analytics card
 
 
 
@@ -53,6 +65,33 @@ Cart Screen
 Checkout Screen
 Order Success Screen
 ------------------my next working
+-activate media storage on firebase for store profile
+------------------complete ui
+-enable store setting menu
+-setup the store menu
+-add category enums
+-add currency enums
+-verify edit store profile
+-verify store creation profile
+-verify store pin
+-delete store
+
+-
+-->
+
+`Selected InProgress Points`
+-- 
+
+
+
+
+- 2
+Slices
+
+`Today's Complete`
+> 9 April 2026
+> 
+> 8 April 2026
 Slices ui screens
 - Categories,
 - Dashboard, dashboard
@@ -60,14 +99,7 @@ Slices ui screens
 - OrderHistory, order_history
 - Orders,
 - POSSale, pos_sale
-
--->
-
-`Selected InProgress Points`
--- 
-
-
---
+> ---
 -also in signup security q and answer hide
 -security question and security answers hide rest password
 -in menu role remove only user show
@@ -78,15 +110,10 @@ Slices ui screens
 -hero tittle to big tittle
 -loading on buttons
 -dashboard values by default zero
-
 password atch rmove green 
 on faile old password not match
-remove check from the snackbar successfully 
-
-- 2
-Slices
-
-`Today's Complete`
+remove check from the snackbar successfully
+---
 > 7 April 2026
 - login
 - forgot password

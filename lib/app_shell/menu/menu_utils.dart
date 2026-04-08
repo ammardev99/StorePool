@@ -27,12 +27,12 @@ class MenuModel {
 // Menu List
 final List<MenuModel> menuList = [
   // --------------User Account--------------//
-  // MenuModel(
-  //   prefix: Icons.store_mall_directory_rounded,
-  //   label: 'Store Settings',
-  //   group: MenuGroup.userAccount,
-  //   action: ZiTapAction(type: ZiTapActionType.openPage, page: StoreMenuView()),
-  // ),
+  MenuModel(
+    prefix: Icons.store_mall_directory_rounded,
+    label: 'Store Settings',
+    group: MenuGroup.userAccount,
+    action: ZiTapAction(type: ZiTapActionType.openPage, page: StoreMenuView()),
+  ),
   // Edit Profile
   MenuModel(
     prefix: Icons.person_outline_rounded,

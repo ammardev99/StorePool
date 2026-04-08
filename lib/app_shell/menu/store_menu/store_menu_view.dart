@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:storepool/app_shell/menu/store_menu/store_sub_pages/pin_reset_store.dart';
 import 'package:zi_core/zi_core_io.dart';
 
 import '../../app_shell_io.dart';
@@ -13,7 +14,7 @@ class StoreMenuView extends StatelessWidget {
     // DO: Get store data from provider
     const storeName = 'No Store';
     const storeCategory = 'Create a store to get started';
-    const hasStore = false;
+    const hasStore = true;
 
     return ZiScaffoldB(
       showPagePadding: false,
@@ -57,6 +58,7 @@ class StoreMenuView extends StatelessWidget {
                     action: ZiTapAction(
                       type: ZiTapActionType.custom,
                       onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => CreateStoreView()));
                         // DO: Navigate to CreateStoreView
                       },
                     ),
@@ -71,6 +73,7 @@ class StoreMenuView extends StatelessWidget {
                     action: ZiTapAction(
                       type: ZiTapActionType.custom,
                       onTap: () {
+                                                Navigator.push(context, MaterialPageRoute(builder: (_) => EditStoreView()));
                         // DO: Navigate to EditStoreView
                       },
                     ),
@@ -81,6 +84,7 @@ class StoreMenuView extends StatelessWidget {
                     action: ZiTapAction(
                       type: ZiTapActionType.custom,
                       onTap: () {
+                                                                        Navigator.push(context, MaterialPageRoute(builder: (_) => PinResetStoreView()));
                         // DO: Navigate to PinResetStoreView
                       },
                     ),
@@ -107,10 +111,18 @@ class StoreMenuView extends StatelessWidget {
                     icon: Icons.delete,
                     iconPrefixColor: ZiColors.lossR,
                     label: "Delete Store",
+
                     labelColor: ZiColors.lossR,
                     action: ZiTapAction(
                       type: ZiTapActionType.custom,
-                      onTap: () {
+                      onTap: () async{
+                        bool? isconfirm = await ziConfirmationDialogResult(
+                          context: context,
+                          colorTone: ZiColors.lossR,
+                          icon: Icons.delete,
+                          actionOn: "Storepool",
+                           actionLabel: "delete");
+
                         // DO: Implement delete store action
                       },
                     ),

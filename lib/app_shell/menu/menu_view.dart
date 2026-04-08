@@ -78,7 +78,7 @@
 // }
 
 import 'package:flutter/material.dart';
-import 'package:storepool/app_services/auth/auth_service.dart';
+import 'package:storepool/firebase_services/auth/auth_service.dart';
 import 'package:zi_core/zi_core_io.dart';
 import '../app_shell_io.dart';
 

@@ -19,6 +19,16 @@ class _LoginViewState extends State<LoginView> {
     super.dispose();
   }
 
+  void showSnack(String message, {bool success = true}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: success ? Colors.green : Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ZiScaffoldB(
@@ -26,24 +36,19 @@ class _LoginViewState extends State<LoginView> {
         shrinkWrap: true,
         children: [
           ziGap(40),
-
           Image.asset(
             ShellImages.logo,
             width: 100,
             height: 100,
             fit: BoxFit.contain,
           ),
-
           ziGap(10),
-
           heroSectionContent(
             title: ShellData.login.title,
             isTitle: true,
             content: ShellData.login.info,
           ),
-
           ziGap(10),
-
           Form(
             child: Column(
               children: [
@@ -53,9 +58,7 @@ class _LoginViewState extends State<LoginView> {
                   controller: controller.emailCtrl,
                   onChanged: (_) => setState(() {}),
                 ),
-
                 ziGap(16),
-
                 ZiInput(
                   label: "Password",
                   variant: ZiInputVariant.stacked,
@@ -72,7 +75,6 @@ class _LoginViewState extends State<LoginView> {
                       variant: ZiButtonVariantB.inLine,
                       action: () {
                         ZiLogger.log("Navigate to Forgot Password");
-
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -84,46 +86,41 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ],
                 ),
-
                 ziGap(10),
+                ZiButtonB(
+                  label: "Login",
+                  expand: true,
+                  loading: controller.isLoading,
+                  action: controller.isValid
+                      ? () async {
+                          setState(() => controller.isLoading = true);
 
-               ZiButtonB(
-  label: "Login",
-  expand: true,
-  loading: controller.isLoading,
-  action: controller.isValid
-      ? () async {
-        controller.isLoading = true;
-        setState(() {});
-          final result = await controller.onLogin();
-        controller.isLoading = false;
-        setState(() {});
+                          final result = await controller.onLogin();
 
-          setState(() {});
+                          setState(() => controller.isLoading = false);
 
-          if (result) {
-            ZiLogger.log("Navigate to Dashboard ✅");
+                          if (result) {
+                            showSnack("Login Successful ", success: true);
+                            ZiLogger.log("Navigate to Dashboard ");
 
-            Navigator.pushAndRemoveUntil(
-              // ignore: use_build_context_synchronously
-              context,
-              MaterialPageRoute(
-                builder: (context) => const StorePoolAppView(),
-              ),
-              (route) => false,
-            );
-          } else {
-            ZiLogger.log("Login Failed ❌");
-          }
-        }
-      : null,
-),
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const StorePoolAppView(),
+                              ),
+                              (route) => false,
+                            );
+                          } else {
+                            showSnack("Login Failed ", success: false);
+                            ZiLogger.log("Login Failed ");
+                          }
+                        }
+                      : null,
+                ),
               ],
             ),
           ),
-
           ziGap(20),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -133,7 +130,6 @@ class _LoginViewState extends State<LoginView> {
                 variant: ZiButtonVariantB.inLine,
                 action: () {
                   ZiLogger.log("Navigate to Signup");
-
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const SignupView()),

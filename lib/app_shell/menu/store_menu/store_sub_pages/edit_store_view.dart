@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storepool/data/store_enums.dart';
 import 'package:zi_core/zi_core_io.dart';
 import '../../../app_shell_io.dart';
 
@@ -13,8 +14,8 @@ class _EditStoreViewState extends State<EditStoreView> {
   final TextEditingController nameCtrl = TextEditingController();
   final TextEditingController phoneCtrl = TextEditingController();
   final TextEditingController addressCtrl = TextEditingController();
-  // StoreCategory selectedCategory = StoreCategory.retail;
-  // StoreCurrency selectedCurrency = StoreCurrency.pkr;
+  StoreCategory selectedCategory = StoreCategory.retail;
+  StoreCurrency selectedCurrency = StoreCurrency.pkr;
 
   @override
   void dispose() {
@@ -55,30 +56,30 @@ class _EditStoreViewState extends State<EditStoreView> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                // Expanded(
-                //   child: ZiSelectB<StoreCategory>(
-                //     label: 'Category',
-                //     items: StoreCategory.values,
-                //     value: selectedCategory,
-                //     itemLabel: (e) => e.label,
-                //     onChanged: (v) {
-                //       // DO: Handle category change
-                //     },
-                //   ),
-                // ),
-                // ziGap(10),
-                // SizedBox(
-                //   width: 130,
-                //   child: ZiSelectB<StoreCurrency>(
-                //     label: 'Currency',
-                //     items: StoreCurrency.values,
-                //     value: selectedCurrency,
-                //     itemLabel: (e) => e.label,
-                //     onChanged: (v) {
-                //       // DO: Handle currency change
-                //     },
-                //   ),
-                // ),
+                Expanded(
+                  child: ZiSelectB<StoreCategory>(
+                    label: 'Category',
+                    items: StoreCategory.values,
+                    value: selectedCategory,
+                    itemLabel: (e) => e.label,
+                    onChanged: (v) {
+                      // DO: Handle category change
+                    },
+                  ),
+                ),
+                ziGap(10),
+                SizedBox(
+                  width: 130,
+                  child: ZiSelectB<StoreCurrency>(
+                    label: 'Currency',
+                    items: StoreCurrency.values,
+                    value: selectedCurrency,
+                    itemLabel: (e) => e.label,
+                    onChanged: (v) {
+                      // DO: Handle currency change
+                    },
+                  ),
+                ),
               ],
             ),
             ziGap(16),

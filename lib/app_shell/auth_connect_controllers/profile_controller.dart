@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:storepool/app_services/auth/auth_service.dart';
+import 'package:storepool/firebase_services/auth/auth_service.dart';
 import 'package:zi_core/zi_core_io.dart';
 class EditProfileController {
   final nameCtrl = TextEditingController();
