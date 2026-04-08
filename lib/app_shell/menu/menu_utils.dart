@@ -33,16 +33,16 @@ final List<MenuModel> menuList = [
   //   group: MenuGroup.userAccount,
   //   action: ZiTapAction(type: ZiTapActionType.openPage, page: StoreMenuView()),
   // ),
-  // // Edit Profile
-  // MenuModel(
-  //   prefix: Icons.person_outline_rounded,
-  //   label: 'Edit Profile',
-  //   group: MenuGroup.userAccount,
-  //   action: ZiTapAction(
-  //     type: ZiTapActionType.openPage,
-  //     page: EditProfileView(),
-  //   ),
-  // ),
+  // Edit Profile
+  MenuModel(
+    prefix: Icons.person_outline_rounded,
+    label: 'Edit Profile',
+    group: MenuGroup.userAccount,
+    action: ZiTapAction(
+      type: ZiTapActionType.openPage,
+      page: EditProfileView(),
+    ),
+  ),
   // Reset Password
   MenuModel(
     prefix: Icons.password_outlined,

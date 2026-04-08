@@ -51,8 +51,8 @@ class SignupController {
         email.isNotEmpty &&
         isEmailValid &&
         isPasswordValid &&
-        secQ.isNotEmpty &&
-        secA.isNotEmpty &&
+        // secQ.isNotEmpty &&
+        // secA.isNotEmpty &&
         agreedToTerms;
   }
 

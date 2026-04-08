@@ -42,6 +42,7 @@ class _SignupViewState extends State<SignupView> {
 
           heroSectionContent(
             title: ShellData.register.title,
+            isTitle: true,
             content: ShellData.register.info,
           ),
 
@@ -87,21 +88,21 @@ class _SignupViewState extends State<SignupView> {
 
                 ziGap(16),
 
-                ZiInput(
-                  label: "Security Question",
-                  variant: ZiInputVariant.stacked,
-                  controller: controller.secQCtrl,
-                ),
+                // ZiInput(
+                //   label: "Security Question",
+                //   variant: ZiInputVariant.stacked,
+                //   controller: controller.secQCtrl,
+                // ),
 
-                ziGap(10),
+                // ziGap(10),
 
-                ZiInput(
-                  label: "Security Answer",
-                  variant: ZiInputVariant.stacked,
-                  controller: controller.secACtrl,
-                ),
+                // ZiInput(
+                //   label: "Security Answer",
+                //   variant: ZiInputVariant.stacked,
+                //   controller: controller.secACtrl,
+                // ),
 
-                ziGap(16),
+                // ziGap(16),
 
                 Row(
                   children: [
@@ -137,8 +138,9 @@ class _SignupViewState extends State<SignupView> {
                 ziGap(10),
 
                ZiButtonB(
-  label: controller.isLoading ? "Signing up..." : "Signup",
+  label:  "Signup",
   expand: true,
+  loading: controller.isLoading,
  action: () async {
   setState(() => controller.isLoading = true); // start loading
 

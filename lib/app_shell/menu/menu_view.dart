@@ -77,7 +77,6 @@
 //   }
 // }
 
-
 import 'package:flutter/material.dart';
 import 'package:storepool/app_services/auth/auth_service.dart';
 import 'package:zi_core/zi_core_io.dart';
@@ -125,77 +124,85 @@ class _MenuViewState extends State<MenuView> {
   Widget build(BuildContext context) {
     return ZiScaffoldB(
       showPagePadding: false,
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                ziGap(20),
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
-                            children: [
-                              ZiSvgIcon(
-                                path: ShellSVGs.avPerson,
-                                color: ZiColors.primary,
-                                size: 80,
-                              ),
-                              heroSectionContent(
-                                title: userName,
-                                content: '$userEmail • Role: $userRole',
-                              ),
-                            ],
+      body:
+          isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Column(
+                children: [
+                  ziGap(20),
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Column(
+                              children: [
+                                ZiSvgIcon(
+                                  path: ShellSVGs.avPerson,
+                                  color: ZiColors.primary,
+                                  size: 80,
+                                ),
+                                heroSectionContent(
+                                  title: userName,
+                                  content: '$userEmail • $userRole',
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        ActionTile(
+                          title: "Free Plan",
+                          actionLabel: "Upgrade",
+                          onActionTap: () => UpgradeDialog.show(context),
+                        ),
+                      ],
+                    ),
+                  ),
+                  ziGap(10),
+                  Divider(height: 2, color: ZiColors.border),
+                  Expanded(
+                    child: ListView(
+                      padding: const EdgeInsets.all(0),
+                      children: [
+                        buildGroupedMenu(context, showGroupTitle: false),
+                        ZiMenuTile1(
+                          icon: Icons.power_settings_new_rounded,
+                          iconPrefixColor: Colors.red,
+                          label: "Logout",
+                          action: ZiTapAction(
+                            type: ZiTapActionType.custom,
+                            onTap: () async {
+                              bool? isConfirm =
+                                  await ziConfirmationDialogResult(
+                                    context: context,
+                                    actionLabel: "Logout",
+                                    colorTone: ZiColors.debugRed,
+                                    icon: Icons.power_settings_new_rounded,
+                                  );
+
+                              if (isConfirm!) {
+                                ZiLogger.log("Logout Button Clicked 🔴");
+                                await _authService.logout();
+                                ZiLogger.log("User Logged Out ✅");
+                                Navigator.pushAndRemoveUntil(
+                                  // ignore: use_build_context_synchronously
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const ZAppGateView(),
+                                  ),
+                                  (route) => false,
+                                );
+                              }
+                            },
                           ),
-                        ],
-                      ),
-                      ActionTile(
-                        title: "Free Plan",
-                        actionLabel: "Upgrade",
-                        onActionTap: () => UpgradeDialog.show(context),
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                ziGap(10),
-                Divider(height: 2, color: ZiColors.border),
-                Expanded(
-                  child: ListView(
-                    padding: const EdgeInsets.all(0),
-                    children: [
-                      buildGroupedMenu(context, showGroupTitle: false),
-                     ZiMenuTile1(
-  icon: Icons.power_settings_new_rounded,
-  iconPrefixColor: Colors.red,
-  label: "Logout",
-  action: ZiTapAction(
-    type: ZiTapActionType.custom,
-    onTap: () async {
-      ZiLogger.log("Logout Button Clicked 🔴");
-
-      await _authService.logout();
-
-      ZiLogger.log("User Logged Out ✅");
-
-      Navigator.pushAndRemoveUntil(
-        // ignore: use_build_context_synchronously
-        context,
-        MaterialPageRoute(
-          builder: (context) => const ZAppGateView(),
-        ),
-        (route) => false,
-      );
-    },
-  ),
-),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+                ],
+              ),
     );
   }
 }

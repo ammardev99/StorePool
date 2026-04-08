@@ -35,6 +35,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
 
             heroSectionContent(
               title: ShellData.resetPassword.title,
+              isTitle: true,
               content: ShellData.resetPassword.info,
             ),
 
@@ -71,65 +72,110 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
 
             ziGap(16),
 
-            Row(
-              children: [
-                ZiCheckbox(
-                  value: controller.isUpdateSecurityQA,
-                  onChanged: (value) {
-                    controller.toggleSecurityQA(value);
-                    setState(() {});
-                  },
-                ),
-                ziGap(10),
-                const Text("Update security question!"),
-              ],
-            ),
+            // Row(
+            //   children: [
+            //     ZiCheckbox(
+            //       value: controller.isUpdateSecurityQA,
+            //       onChanged: (value) {
+            //         controller.toggleSecurityQA(value);
+            //         setState(() {});
+            //       },
+            //     ),
+            //     ziGap(10),
+            //     const Text("Update security question!"),
+            //   ],
+            // ),
 
-            if (controller.isUpdateSecurityQA) ...[
-              ziGap(16),
-              ZiInput(
-                label: "Security Question",
-                variant: ZiInputVariant.stacked,
-                controller: controller.secQuestionCtrl,
-                  onChanged: (_) => setState(() {}), // ✅ ADD
+            // if (controller.isUpdateSecurityQA) ...[
+            //   ziGap(16),
+            //   ZiInput(
+            //     label: "Security Question",
+            //     variant: ZiInputVariant.stacked,
+            //     controller: controller.secQuestionCtrl,
+            //       onChanged: (_) => setState(() {}), // ✅ ADD
 
-              ),
-              ziGap(16),
-              ZiInput(
-                label: "Secure Answer",
-                variant: ZiInputVariant.stacked,
-                controller: controller.secAnswerCtrl,
-                  onChanged: (_) => setState(() {}), // ✅ ADD
+            //   ),
+            //   ziGap(16),
+            //   ZiInput(
+            //     label: "Secure Answer",
+            //     variant: ZiInputVariant.stacked,
+            //     controller: controller.secAnswerCtrl,
+            //       onChanged: (_) => setState(() {}),
 
-              ),
-            ],
+            //   ),
+            // ],
 
-            ziGap(16),
+            // ziGap(16),
+ziGap(10),
 
+if (controller.newPassCtrl.text.isNotEmpty ||
+    controller.confirmPassCtrl.text.isNotEmpty)
+  Row(
+    children: [
+      Icon(
+        controller.isPasswordMatch ? Icons.check_circle : Icons.cancel,
+        color: controller.isPasswordMatch ? Colors.green : Colors.red,
+        size: 18,
+      ),
+      ziGap(8),
+      Text(
+        controller.isPasswordMatch
+            ? "Passwords match"
+            : "New and Confirm Passwords must be same",
+        style: TextStyle(
+          color: controller.isPasswordMatch
+              ? Colors.green
+              : Colors.red,
+          fontSize: 13,
+        ),
+      ),
+    ],
+  ),
+
+ziGap(16),
            ZiButtonB(
   expand: true,
-  label: controller.isLoading ? "Updating..." : "Update Password",
+  label:  "Update Password",
+  loading: controller.isLoading,
   action: controller.isValid
-      ? () async {
-          setState(() {}); // refresh for loading
+    ? () async {
+        setState(() {}); 
 
-          final success = await controller.onSubmit();
+        final success = await controller.onSubmit();
 
-          setState(() {}); // stop loading
+        setState(() {});
 
-          if (success) {
-            ZiLogger.log("Navigate to Login ✅");
+        if (success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Password updated successfully ✅"),
+              backgroundColor: Colors.green,
+               behavior: SnackBarBehavior.floating,
+               
+    
+            ),
+          );
 
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const LoginView(),
-              ),
-              (route) => false,
-            );
-          }
+          ZiLogger.log("Navigate to Login ✅");
+
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const LoginView(),
+            ),
+            (route) => false,
+          );
+        } else {
+          // ❌ ERROR SNACKBAR
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Failed to update password ❌"),
+              backgroundColor: Colors.red,
+            ),
+          );
         }
-      : null,
+      }
+    : null,
 ),
           ],
         ),

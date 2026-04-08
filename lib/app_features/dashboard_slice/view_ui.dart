@@ -47,11 +47,11 @@ class _DashboardSliceViewState extends State<DashboardSliceView> {
           final String? error = null;
       
           // 🔹 Dummy data
-          final totalProjects = 12;
-          final totalPhases = 8;
-          final totalTasks = 45;
-          final completedTasks = 30;
-          final pendingTasks = 15;
+          final totalProjects = 0;
+          final totalPhases = 0;
+          final totalTasks = 0;
+          final completedTasks = 0;
+          final pendingTasks = 0;
       
           // ignore: dead_code
           if (isLoading) {

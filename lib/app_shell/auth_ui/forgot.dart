@@ -33,6 +33,7 @@ class _ForgotViewState extends State<ForgotView> {
 
           heroSectionContent(
             title: ShellData.forgotPassword.title,
+            isTitle: true,
             content: ShellData.forgotPassword.info,
           ),
 
@@ -48,14 +49,13 @@ class _ForgotViewState extends State<ForgotView> {
                   onChanged: (_) => setState(() {}),
                 ),
 
-                ziGap(16),
 
-                ZiInput(
-                  label: "Phone Number",
-                  variant: ZiInputVariant.stacked,
-                  controller: controller.phoneCtrl,
-                  onChanged: (_) => setState(() {}),
-                ),
+                // ZiInput(
+                //   label: "Phone Number",
+                //   variant: ZiInputVariant.stacked,
+                //   controller: controller.phoneCtrl,
+                //   onChanged: (_) => setState(() {}),
+                // ),
               ],
             ),
           ),
@@ -64,6 +64,7 @@ class _ForgotViewState extends State<ForgotView> {
 
           ZiButtonB(
             expand: true,
+            loading: controller.isLoading,
             label: "Continue",
             action: () async {
               await controller.onSubmit();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storepool/app_services/auth/auth_service.dart';
 import 'package:zi_core/zi_core_io.dart';
 import '../../app_shell_io.dart';
 
@@ -12,17 +13,23 @@ class EditProfileView extends StatefulWidget {
 class _EditProfileViewState extends State<EditProfileView> {
   final controller = EditProfileController();
 
-  @override
-  void initState() {
-    super.initState();
+ @override
+void initState() {
+  super.initState();
+  _loadUserData();
+}
 
-    // 🔥 Replace with real user data (from API / local storage)
+Future<void> _loadUserData() async {
+  final userData = await AuthService().getUserData();
+  if (userData != null) {
     controller.init(
-      name: "Ammar",
-      phone: "03001234567",
-      email: "ammar@gmail.com",
+      name: userData['name'] ?? '',
+      phone: userData['phone'] ?? '',
+      email: userData['email'] ?? '',
     );
+    setState(() {}); // refresh UI after loading
   }
+}
 
   @override
   void dispose() {
@@ -45,6 +52,7 @@ class _EditProfileViewState extends State<EditProfileView> {
 
             heroSectionContent(
               title: ShellData.editProfile.title,
+              isTitle: true,
               content: ShellData.editProfile.info,
             ),
 
@@ -77,17 +85,27 @@ class _EditProfileViewState extends State<EditProfileView> {
 
             ziGap(20),
 
-            ZiButtonB(
-              expand: true,
-              label: controller.isLoading ? "Updating..." : "Update Profile",
-              action:
-                  controller.isValid
-                      ? () async {
-                        await controller.onUpdate();
-                        setState(() {});
-                      }
-                      : null,
-            ),
+          ZiButtonB(
+  expand: true,
+  label: "Update Profile",
+  loading: controller.isLoading,
+  action: controller.isValid
+      ? () async {
+          final success = await controller.onUpdate(); // now returns bool
+          setState(() {}); // refresh UI/loading
+          if (success) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const MenuView()),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Failed to update profile")),
+            );
+          }
+        }
+      : null,
+),
           ],
         ),
       ),

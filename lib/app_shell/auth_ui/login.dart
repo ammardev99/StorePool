@@ -38,6 +38,7 @@ class _LoginViewState extends State<LoginView> {
 
           heroSectionContent(
             title: ShellData.login.title,
+            isTitle: true,
             content: ShellData.login.info,
           ),
 
@@ -87,11 +88,16 @@ class _LoginViewState extends State<LoginView> {
                 ziGap(10),
 
                ZiButtonB(
-  label: controller.isLoading ? "Logging in..." : "Login",
+  label: "Login",
   expand: true,
+  loading: controller.isLoading,
   action: controller.isValid
       ? () async {
+        controller.isLoading = true;
+        setState(() {});
           final result = await controller.onLogin();
+        controller.isLoading = false;
+        setState(() {});
 
           setState(() {});
 

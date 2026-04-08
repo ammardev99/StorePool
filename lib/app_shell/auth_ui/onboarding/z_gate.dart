@@ -25,7 +25,7 @@ class ZAppGateView extends StatelessWidget {
             label: "Create New Account",
             variant: ZiButtonVariantB.primary,
             action: () {
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const SignupView()),
               );

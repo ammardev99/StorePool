@@ -28,6 +28,7 @@ class LoginController {
   bool get isEmailValid => email.contains("@");
 
   Future<bool> onLogin() async {
+    isLoading = true;
     ZiLogger.log("Login Button Clicked → Email: $email");
 
     if (!isValid || !isEmailValid) {
@@ -48,6 +49,7 @@ class LoginController {
       ZiLogger.log(result
           ? "Login Success ✅ UID: ${_authService.currentUser?.uid}"
           : "Login Failed ❌");
+    isLoading = false;
 
       return result;
     } catch (e) {
@@ -56,5 +58,6 @@ class LoginController {
     } finally {
       isLoading = false;
     }
+    
   }
 }

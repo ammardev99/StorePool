@@ -5,6 +5,11 @@
 ---
 
 ## OnDemand Zi_Core Teams
+-alert dialog when press on logout to confirmation(use zi confirm dialog return true of false)
+-only number keyboard open on the phone number
+-we can search widget by name in web package app
+- "actionLabel" set default value ziConfirmationDialogResult
+
 
 
 ## new tasks
@@ -59,12 +64,37 @@ Slices ui screens
 -->
 
 `Selected InProgress Points`
+-- 
+
+
+--
+-also in signup security q and answer hide
+-security question and security answers hide rest password
+-in menu role remove only user show
+-snackbar show when update password and reset password
+-password same match indication in rest password
+-in menu enable edit profile
+-logout confirmation dialog by zi core
+-hero tittle to big tittle
+-loading on buttons
+-dashboard values by default zero
+
+password atch rmove green 
+on faile old password not match
+remove check from the snackbar successfully 
 
 - 2
 Slices
 
 `Today's Complete`
-
+> 7 April 2026
+- login
+- forgot password
+- reset password
+---
+> 6 April 2026
+- signup
+---
 > 2 April 2026
 Bottom bar
 
