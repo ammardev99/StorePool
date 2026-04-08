@@ -118,10 +118,9 @@ if (controller.newPassCtrl.text.isNotEmpty ||
         size: 18,
       ),
       ziGap(8),
+      if(!controller.isPasswordMatch)
       Text(
-        controller.isPasswordMatch
-            ? "Passwords match"
-            : "New and Confirm Passwords must be same",
+            "New and Confirm Passwords must be same",
         style: TextStyle(
           color: controller.isPasswordMatch
               ? Colors.green
@@ -156,7 +155,7 @@ ziGap(16),
             ),
           );
 
-          ZiLogger.log("Navigate to Login ✅");
+          ZiLogger.log("Navigate to Login ");
 
           Navigator.pushAndRemoveUntil(
             context,
@@ -169,7 +168,7 @@ ziGap(16),
           // ❌ ERROR SNACKBAR
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text("Failed to update password ❌"),
+              content: Text("Old Password not match"),
               backgroundColor: Colors.red,
             ),
           );
