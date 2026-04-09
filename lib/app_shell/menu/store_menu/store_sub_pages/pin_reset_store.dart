@@ -1,24 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:storepool/app_shell/a_controllers/store_controllers/pinreset_controller.dart';
+import 'package:storepool/app_shell/shell_utils/images.dart';
 import 'package:zi_core/zi_core_io.dart';
-import '../../../app_shell_io.dart';
 
 class PinResetStoreView extends StatefulWidget {
-  const PinResetStoreView({super.key});
+  final String? storeId; // pass actual storeId if needed
+  const PinResetStoreView({super.key, this.storeId});
 
   @override
   State<PinResetStoreView> createState() => _ResetStorePINState();
 }
 
 class _ResetStorePINState extends State<PinResetStoreView> {
-  final TextEditingController currentPinCtrl = TextEditingController();
-  final TextEditingController newPinCtrl = TextEditingController();
-  bool isStorePinActive = false;
-  bool isPinCurrentlyEnabled = false; // DO: Get from backend
+  final controller = PinResetController();
+  String storeId = ""; 
+
+  @override
+  void initState() {
+    super.initState();
+    controller.loadPinState(storeId).then((_) => setState(() {}));
+  }
 
   @override
   void dispose() {
-    currentPinCtrl.dispose();
-    newPinCtrl.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -28,54 +33,54 @@ class _ResetStorePINState extends State<PinResetStoreView> {
       appBar: ZiAppBarB(title: ""),
       body: ListView(
         children: [
-          ZiSvgIcon(
-            path: ShellSVGs.avSecure,
-            color: ZiColors.primary,
-            size: 80,
-          ),
-
-          heroSectionContent(
-            title: "Reset Store PIN",
-            content: "Keep your PIN updated.",
-          ),
+          ZiSvgIcon(path: ShellSVGs.avSecure, color: ZiColors.primary, size: 80),
+          heroSectionContent(title: "Reset Store PIN", content: "Keep your PIN updated."),
           ziGap(10),
           ZiSwitchB(
-            value: isStorePinActive,
-            onChanged: (value) {
-              // DO: Implement toggle PIN action
-              setState(() => isStorePinActive = value);
-            },
+            value: controller.isStorePinActive,
+            onChanged: (value) => setState(() => controller.isStorePinActive = value),
             label: "Secure My Store via PIN",
           ),
           ziGap(10),
-          if (isStorePinActive) ...[
-            // only show current PIN field if PIN was already set
-            if (isPinCurrentlyEnabled) ...[
+          if (controller.isStorePinActive) ...[
+            if (controller.isPinCurrentlyEnabled)
               ZiInput(
                 label: "Current PIN",
-                variant: ZiInputVariant.stacked,
                 type: ZiInputType.password,
-                controller: currentPinCtrl,
-                onChanged: (_) => setState(() {}),
+                controller: controller.currentPinCtrl,
               ),
-              ziGap(16),
-            ],
+            ziGap(16),
             ZiInput(
               label: "New PIN",
-              variant: ZiInputVariant.stacked,
               type: ZiInputType.password,
-              controller: newPinCtrl,
-              onChanged: (_) => setState(() {}),
+              controller: controller.newPinCtrl,
             ),
             ziGap(16),
-            ZiButtonB(
-              expand: true,
-              label:
-                  isPinCurrentlyEnabled ? "Update Store PIN" : "Set Store PIN",
-              action: () {
-                // DO: Implement update PIN action
-              },
-            ),
+           ZiButtonB(
+  expand: true,
+  label: controller.isPinCurrentlyEnabled ? "Update Store PIN" : "Set Store PIN",
+  loading: controller.isLoading,
+  action: () async {
+    setState(() {}); // start loading
+    try {
+      await controller.handlePinAction();
+
+      // Success
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Store PIN updated successfully!" ,), backgroundColor: Colors.green),
+      );
+      Navigator.pop(context); // pop after success
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to update PIN: $e"), backgroundColor: Colors.red),
+      );
+    } finally {
+      setState(() {}); // stop loading
+    }
+  },
+),
           ],
         ],
       ),

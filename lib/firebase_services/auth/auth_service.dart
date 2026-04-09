@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:zi_core/zi_core_io.dart';
@@ -7,7 +9,7 @@ class AuthService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // =========================================================
-  // ✅ SIGNUP (WITH ROLE SUPPORT)
+  // ✅ SIGNUP (WITH STRUCTURED USER DATA)
   // =========================================================
   Future<bool> signupUser({
     required String name,
@@ -21,32 +23,38 @@ class AuthService {
 
     try {
       // 1️⃣ Create Firebase user
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
       final user = userCredential.user;
-
       if (user == null) {
-        ZiLogger.log("Signup Failed: User is null ❌");
+        ZiLogger.log("Signup Failed ❌ User is null");
         return false;
       }
 
       ZiLogger.log("Firebase Auth Success: ${user.uid}");
 
-      // 2️⃣ Save user data + ROLE
+      // 2️⃣ Save structured user data
       await _firestore.collection('users').doc(user.uid).set({
-        'name': name,
-        'phone': phone,
-        'email': email,
+        'profile': {
+          'name': name,
+          'email': email,
+          'phone': phone,
+          'image': null,
+        },
+        'subscription_plan': 'free',
+        'stores_owned': [],
+        'hasStore': false,
         'role': 'user', // default role
         'security_question': secQ,
         'security_answer': secA,
         'created_at': FieldValue.serverTimestamp(),
       });
 
-      ZiLogger.log("User saved with role ✅");
+      ZiLogger.log("User created with structured schema ✅");
       return true;
     } on FirebaseAuthException catch (e) {
       ZiLogger.log("FirebaseAuth Error: ${e.message}");
@@ -67,14 +75,12 @@ class AuthService {
     ZiLogger.log("AuthService → loginUser() called");
 
     try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      UserCredential userCredential =
+          await _auth.signInWithEmailAndPassword(email: email, password: password);
 
       final user = userCredential.user;
       if (user == null) {
-        ZiLogger.log("Login Failed: User null ❌");
+        ZiLogger.log("Login Failed ❌ User null");
         return false;
       }
 
@@ -90,7 +96,7 @@ class AuthService {
   }
 
   // =========================================================
-  // ✅ FORGOT PASSWORD (EMAIL RESET)
+  // ✅ SEND PASSWORD RESET EMAIL
   // =========================================================
   Future<bool> sendResetEmail({required String email}) async {
     ZiLogger.log("AuthService → sendResetEmail() called");
@@ -109,7 +115,7 @@ class AuthService {
   }
 
   // =========================================================
-  // ✅ RESET PASSWORD (LOGGED-IN USER)
+  // ✅ RESET PASSWORD FOR LOGGED-IN USER
   // =========================================================
   Future<bool> resetPassword({
     required String currentPassword,
@@ -143,6 +149,7 @@ class AuthService {
         });
       }
 
+      ZiLogger.log("Password reset successful ✅");
       return true;
     } on FirebaseAuthException catch (e) {
       ZiLogger.log("FirebaseAuth Error: ${e.message}");

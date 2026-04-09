@@ -60,8 +60,9 @@ class MyApp extends StatelessWidget {
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       // home: ZiSplashScreen(),
-      home: StoreMenuView(),
-      // home: ZiSplashScreen(),
+      // home: StoreMenuView(),
+      // home: CreateStoreView(),
+      home: ZiSplashScreen(),
       // home: StorePoolAppView(),
       // home: const TestShell(),
     );

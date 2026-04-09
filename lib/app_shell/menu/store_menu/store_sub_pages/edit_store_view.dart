@@ -1,46 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:storepool/app_shell/a_controllers/store_controllers/editstore_controller.dart';
+import 'package:storepool/app_shell/shell_utils/images.dart';
 import 'package:storepool/data/store_enums.dart';
 import 'package:zi_core/zi_core_io.dart';
-import '../../../app_shell_io.dart';
 
 class EditStoreView extends StatefulWidget {
-  const EditStoreView({super.key});
+   final String storeId;
+  const EditStoreView({super.key, required this.storeId});
 
   @override
   State<EditStoreView> createState() => _EditStoreViewState();
 }
 
 class _EditStoreViewState extends State<EditStoreView> {
-  final TextEditingController nameCtrl = TextEditingController();
-  final TextEditingController phoneCtrl = TextEditingController();
-  final TextEditingController addressCtrl = TextEditingController();
-  StoreCategory selectedCategory = StoreCategory.retail;
-  StoreCurrency selectedCurrency = StoreCurrency.pkr;
+  final controller = EditStoreController();
+  String? storeId = ""; 
+
+  @override
+void initState() {
+  super.initState();
+  controller.loadStore(widget.storeId).then((_) {
+    if (mounted) setState(() {}); 
+  });
+}
 
   @override
   void dispose() {
-    nameCtrl.dispose();
-    phoneCtrl.dispose();
-    addressCtrl.dispose();
+    controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // DO: Prefill data from store
-    // DO: Get last updated date
-
     return ZiScaffoldB(
       appBar: ZiAppBarB(title: "Edit Store Profile"),
       body: Form(
         child: ListView(
           children: [
-            ZiSvgIcon(
-              path: ShellSVGs.avShop,
-              color: ZiColors.primary,
-              size: 80,
-            ),
-
+            ZiSvgIcon(path: ShellSVGs.avShop, color: ZiColors.primary, size: 80),
             heroSectionContent(
               title: "Store Profile",
               content: "Keep Your Store Info Up to date.",
@@ -48,23 +45,20 @@ class _EditStoreViewState extends State<EditStoreView> {
             ziGap(20),
             ZiInput(
               label: "Store Name",
-              controller: nameCtrl,
+              controller: controller.nameCtrl,
               variant: ZiInputVariant.stacked,
               onChanged: (_) => setState(() {}),
             ),
             ziGap(16),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Expanded(
                   child: ZiSelectB<StoreCategory>(
                     label: 'Category',
                     items: StoreCategory.values,
-                    value: selectedCategory,
+                    value: controller.selectedCategory,
                     itemLabel: (e) => e.label,
-                    onChanged: (v) {
-                      // DO: Handle category change
-                    },
+                    onChanged: (v) => setState(() => controller.setCategory(v!)),
                   ),
                 ),
                 ziGap(10),
@@ -73,43 +67,26 @@ class _EditStoreViewState extends State<EditStoreView> {
                   child: ZiSelectB<StoreCurrency>(
                     label: 'Currency',
                     items: StoreCurrency.values,
-                    value: selectedCurrency,
+                    value: controller.selectedCurrency,
                     itemLabel: (e) => e.label,
-                    onChanged: (v) {
-                      // DO: Handle currency change
-                    },
+                    onChanged: (v) => setState(() => controller.setCurrency(v!)),
                   ),
                 ),
               ],
             ),
             ziGap(16),
-            ZiInput(
-              label: "Phone",
-              controller: phoneCtrl,
-              variant: ZiInputVariant.stacked,
-              onChanged: (_) => setState(() {}),
-            ),
+            ZiInput(label: "Phone", controller: controller.phoneCtrl),
             ziGap(16),
-            ZiInput(
-              label: "Address",
-              controller: addressCtrl,
-              variant: ZiInputVariant.stacked,
-              onChanged: (_) => setState(() {}),
-            ),
-            ziGap(10),
-            const Text(
-              'Last updated',
-              style: TextStyle(fontSize: 12),
-              textAlign: TextAlign.end,
-            ),
+            ZiInput(label: "Address", controller: controller.addressCtrl),
             ziGap(20),
-            ZiButtonB(
-              expand: true,
-              label: "Update Store Profile",
-              action: () {
-                // DO: Implement update store action
-              },
-            ),
+           ZiButtonB(
+  expand: true,
+  label: "Update Store Profile",
+  loading: controller.isLoading,
+  action: () async {
+    await controller.updateStore(context, () => setState(() {}));
+  },
+),
           ],
         ),
       ),

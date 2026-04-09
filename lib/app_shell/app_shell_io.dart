@@ -48,11 +48,11 @@ export './widgets/price_text.dart';
 
 // -----------------
 
-export './auth_connect_controllers/forgot_controller.dart';
-export './auth_connect_controllers/login_controller.dart';
-export './auth_connect_controllers/reset_password_controller.dart';
-export './auth_connect_controllers/signup_controller.dart';
-export './auth_connect_controllers/profile_controller.dart';
+export 'a_controllers/auth_connect_controllers/forgot_controller.dart';
+export 'a_controllers/auth_connect_controllers/login_controller.dart';
+export 'a_controllers/auth_connect_controllers/reset_password_controller.dart';
+export 'a_controllers/auth_connect_controllers/signup_controller.dart';
+export 'a_controllers/auth_connect_controllers/profile_controller.dart';
 
 //-------------App Shell------------//
 // v1+1 Jan 15 2026 - LineOvia Project Management Application

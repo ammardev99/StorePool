@@ -81,7 +81,8 @@ Order Success Screen
 
 `Selected InProgress Points`
 -- 
-
+-loading on buttons in store view
+-
 
 
 
