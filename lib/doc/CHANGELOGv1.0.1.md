@@ -25,16 +25,7 @@
 
 
 ## new tasks
-<!- widgets we need in our project
--card widget also called analytics cards
--store name widget
--list tile in service categories
--services lsit widget
--staff list widget also customer list widget both are same
--appointments widget
--sale list widget
--search bar widget
-
+<!-
 
 
 
@@ -67,7 +58,21 @@ Order Success Screen
 ------------------my next working
 -activate media storage on firebase for store profile
 ------------------complete ui
--enable store setting menu
+
+
+-
+-->
+
+`Selected InProgress Points`
+--
+-role in menu 
+
+
+
+
+`Today's Complete`
+> 9 April 2026
+> -enable store setting menu
 -setup the store menu
 -add category enums
 -add currency enums
@@ -75,23 +80,7 @@ Order Success Screen
 -verify store creation profile
 -verify store pin
 -delete store
-
--
--->
-
-`Selected InProgress Points`
--- 
--loading on buttons in store view
--
-
-
-
-- 2
-Slices
-
-`Today's Complete`
-> 9 April 2026
-> 
+---
 > 8 April 2026
 Slices ui screens
 - Categories,

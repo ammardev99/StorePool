@@ -34,7 +34,6 @@ class PinResetController {
   try {
     isLoading = true;
 
-    // Wait a bit to ensure UI shows loading (optional)
     await Future.delayed(const Duration(milliseconds: 50));
 
     if (isStorePinActive) {
