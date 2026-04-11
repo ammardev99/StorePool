@@ -1,72 +1,53 @@
-// ─── Zi_Slice: Actions ───────────────────────────────────────────────────────
-// ROLE: Overflow menu for tile. Handles view/edit/delete navigation.
-// RULE: Use ziFormView for view and edit — never Navigator.push directly.
-// RULE: Always ziConfirmationDialogResult for delete.
-// RULE: Reload list after edit — check return value of ziFormView.
-// RENAME: XxxSliceActions → YourFeatureActions
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── Zi_Slice: Actions (UI ONLY - NORMALIZED) ───────────────────────────
+// ROLE: Overflow menu UI only. No backend, no providers.
+// ───────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
 import 'package:zi_core/zi_core_io.dart';
-import 'controller.dart';
 import 'form.dart';
 
-class ItemsSliceOnActions extends StatelessWidget {
-  final dynamic item;
-  final Future<void> Function()? onReload;
-  final Future<void> Function(String uuid)? onDelete;
+class CatalogItemTileActions extends StatelessWidget {
+  final Map<String, dynamic> item;
 
-  const ItemsSliceOnActions({
-    super.key,
-    required this.item,
-    this.onReload,
-    this.onDelete,
-  });
+  const CatalogItemTileActions({super.key, required this.item});
+
+  // ─── view ─────────────────────────────────────────────────────────────
+  Future<void> _openView(BuildContext context) async {
+    await ziFormView(
+      context,
+      title: 'Item Details',
+      form: const CatalogForm(),
+    );
+  }
+
+  // ─── edit ─────────────────────────────────────────────────────────────
+  Future<void> _openEdit(BuildContext context) async {
+    await ziFormView(
+      context,
+      type: ZiFormViewType.page,
+      title: 'Edit Item',
+      form: const CatalogForm(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return ZiOverOptionsActionButton(
-      title: item.name ?? 'Item',
-      positionType: ZiOverOptionsPosition.bottomSheet,
+      title: item["title"] ?? '',
       style: ZiOverOptionsStyle.defaults.copyWith(showItemBorder: true),
       actions: [
-        // VIEW
         ZiOverOptionsAction(
           icon: Icons.visibility_rounded,
           label: 'View',
-          onTap: () {
-            final ctrl = ItemsSliceController(formMode: ZiFormMode.view)
-              ..prefill(item);
-            ziFormView(
-              context,
-              type: ZiFormViewType.page,
-              title: 'Details',
-              form: ItemsSliceForm(ctrl),
-            );
-          },
+          onTap: () => _openView(context),
         ),
-
-        // EDIT
         ZiOverOptionsAction(
           icon: Icons.edit_rounded,
           label: 'Edit',
-          onTap: () async {
-            final ctrl = ItemsSliceController(formMode: ZiFormMode.edit)
-              ..prefill(item);
-
-            final result = await ziFormView(
-              context,
-              type: ZiFormViewType.page,
-              title: 'Edit',
-              form: ItemsSliceForm(ctrl),
-            );
-            if (result == true && onReload != null) {
-              await onReload!();
-            }
-          },
+          onTap: () => _openEdit(context),
         ),
 
-        // DELETE
+        // ── Delete (UI only) ───────────────────────────────
         ZiOverOptionsAction(
           icon: Icons.delete_rounded,
           label: 'Delete',
@@ -75,13 +56,16 @@ class ItemsSliceOnActions extends StatelessWidget {
             final confirm = await ziConfirmationDialogResult(
               context: context,
               actionLabel: 'Delete',
+              actionOn: item["title"] ?? '',
               icon: Icons.delete_rounded,
               colorTone: ZiColors.lossR,
             );
 
-            if (confirm == true && onDelete != null) {
-              await onDelete!(item.uuid);
-              if (onReload != null) await onReload!();
+            if (confirm == true) {
+              // UI only — no backend
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Deleted (UI only)')),
+              );
             }
           },
         ),

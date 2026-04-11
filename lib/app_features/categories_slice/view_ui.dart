@@ -1,12 +1,11 @@
-// ─── Zi_Slice: View ───────────────────────────────────────────────────────────
-// ROLE: List screen only. No business logic. Reads ViewModel via ref.watch.
-// RULE: Never call Repository directly. Only ViewModel + Controller.
-// RENAME: XxxSliceView → YourFeatureView
-// ─────────────────────────────────────────────────────────────────────────────
-
 import 'package:flutter/material.dart';
+import 'package:storepool/app_features/categories_slice/data/actions_on_tile.dart';
+import 'package:storepool/app_features/categories_slice/data/controller.dart';
+import 'package:storepool/app_features/categories_slice/data/form.dart';
+import 'package:storepool/app_features/categories_slice/tile_widget.dart';
+import 'package:storepool/app_models/catalog_categories_table_data.dart';
+import 'package:storepool/data/store_enums.dart';
 import 'package:zi_core/zi_core_io.dart';
-import 'a_categories_slice_io.dart';
 
 class CategoriesSliceView extends StatefulWidget {
   const CategoriesSliceView({super.key});
@@ -14,81 +13,152 @@ class CategoriesSliceView extends StatefulWidget {
   @override
   State<CategoriesSliceView> createState() => _CategoriesSliceViewState();
 }
+  
+class _CategoriesSliceViewState extends State<CategoriesSliceView>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
 
-class _CategoriesSliceViewState extends State<CategoriesSliceView> {
-  List<dynamic> items = [];
+  CatalogType _activeType = CatalogType.product;
+
+  List<CatalogCategoriesTableData> categories = [];
+  Map<String, int> itemCounts = {};
+
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
+
+    _tabController = TabController(
+      length: CatalogType.values.length,
+      vsync: this,
+    );
+
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) return;
+
+      _activeType = CatalogType.values[_tabController.index];
+      _load();
+    });
+
     _load();
   }
 
   Future<void> _load() async {
-    ZiLogger.log("Loading items...");
-    // TODO: fetch from API
-    setState(() {});
+    setState(() => isLoading = true);
+
+    await Future.delayed(const Duration(milliseconds: 200));
+
+    final data = _dummyData();
+
+    setState(() {
+      categories = data
+          .where((e) => e.catalogType == _activeType.name)
+          .toList();
+
+      itemCounts = {
+        for (final e in data) e.uuid: (e.uuid.hashCode % 8).abs()
+      };
+
+      isLoading = false;
+    });
   }
 
-  Future<void> _delete(String uuid) async {
-    ZiLogger.log("Delete: $uuid");
-    // TODO: delete via API
+  /// =========================
+  /// 🟡 DUMMY DATA SOURCE
+  /// =========================
+  List<CatalogCategoriesTableData> _dummyData() {
+    return const [
+      CatalogCategoriesTableData(
+        uuid: "1",
+        name: "Electronics",
+        catalogType: "product",
+        isSystem: false,
+      ),
+      CatalogCategoriesTableData(
+        uuid: "2",
+        name: "Fashion",
+        catalogType: "product",
+        isSystem: false,
+      ),
+      CatalogCategoriesTableData(
+        uuid: "3",
+        name: "Grocery",
+        catalogType: "product",
+        isSystem: true,
+      ),
+      CatalogCategoriesTableData(
+        uuid: "4",
+        name: "Home Cleaning",
+        catalogType: "service",
+        isSystem: false,
+      ),
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
     return ZiScaffoldB(
-      body: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (_, i) {
-          final item = items[i];
-          return CategoriesSliceTile(
-            item: item,
-            onTap: () async {
-              // Edit flow
-              final ctrl = CategoriesSliceController();
-              ctrl.prefill(item);
-
-              final result = await ziFormView(
-                context,
-                title: 'Edit Category',
-                form: CategoriesSliceForm(
-                  ctrl,
-                  onUpdate: (uuid, name, type, sort, active) async {
-                    ZiLogger.log("Update: $uuid → $name ($type, $sort, $active)");
-                    return true;
-                  },
+      showPagePadding: false,
+      appBar: ZiAppBarB(title: "Categories", centerTitle: true),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ZiTabBar(
+                  controller: _tabController,
+                  type: ZiTabBarType.filter,
+                  tabs: CatalogType.values
+                      .map((e) => Tab(text: e.label))
+                      .toList(),
                 ),
-              );
-
-              if (result == true) _load();
-            },
-            actions: XxxSliceActions(
-              item: item,
-              onReload: _load,
-              onDelete: _delete,
+                Text(
+                  "${_activeType.label}s List (${categories.length})",
+                  style: ZiTypoStyles.titleSm,
+                ),
+              ],
             ),
-          );
-        },
+          ),
+          const Divider(),
+
+          Expanded(
+            child: isLoading && categories.isEmpty
+                ? const Center(child: CircularProgressIndicator())
+                : categories.isEmpty
+                    ? ZiNotFoundStateInfo()
+                    : ListView.builder(
+                        itemCount: categories.length,
+                        itemBuilder: (_, i) {
+                          final cat = categories[i];
+
+                          return CategoriesSliceTile(
+                            item: cat,
+                            onTap: () {},
+                            actions: ActionsOnCategory(
+                              category: cat,
+                              itemCount: itemCounts[cat.uuid] ?? 0,
+                            ),
+                          );
+                        },
+                      ),
+          ),
+        ],
       ),
+
       floatingActionButton: ZiFABIconBtn(
-        onTap: () async {
-          // Add new category
-          final ctrl = CategoriesSliceController();
+        onTap: () {
+          final ctrl = CategoryController(
+            formMode: ZiFormMode.add,
+          )..selectedType = _activeType;
 
-          final result = await ziFormView(
+          ziFormView(
             context,
-            title: 'Add Category',
-            form: CategoriesSliceForm(
-              ctrl,
-              onSubmit: (name, type, sort, active) async {
-                ZiLogger.log("Create: $name ($type, $sort, $active)");
-                return true;
-              },
-            ),
+            title: 'Add ${_activeType.label} Category',
+            form: CategoryForm(ctrl),
           );
-
-          if (result == true) _load();
         },
       ),
     );

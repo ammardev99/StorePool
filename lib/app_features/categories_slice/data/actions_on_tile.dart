@@ -1,90 +1,80 @@
-// ─── Zi_Slice: Actions ───────────────────────────────────────────────────────
-// ROLE: Overflow menu for tile. Handles view/edit/delete navigation.
-// RULE: Use ziFormView for view and edit — never Navigator.push directly.
-// RULE: Always ziConfirmationDialogResult for delete.
-// RULE: Reload list after edit — check return value of ziFormView.
-// RENAME: XxxSliceActions → YourFeatureActions
-// ─────────────────────────────────────────────────────────────────────────────
-
 import 'package:flutter/material.dart';
+import 'package:storepool/app_models/catalog_categories_table_data.dart';
+import 'package:storepool/data/store_enums.dart';
 import 'package:zi_core/zi_core_io.dart';
-import 'controller.dart';
 import 'form.dart';
+import 'controller.dart';
 
-class XxxSliceActions extends StatelessWidget {
-  final dynamic item;
-  final Future<void> Function()? onReload;
-  final Future<void> Function(String uuid)? onDelete;
+class ActionsOnCategory extends StatelessWidget {
+  final CatalogCategoriesTableData category;
+  final int itemCount;
 
-  const XxxSliceActions({
+  const ActionsOnCategory({
     super.key,
-    required this.item,
-    this.onReload,
-    this.onDelete,
+    required this.category,
+    required this.itemCount,
   });
+
+  void _openPage(BuildContext context, ZiFormMode mode) {
+    final ctrl = CategoryController(formMode: mode)..prefill(category);
+
+    ziFormView(
+      context,
+      title: mode == ZiFormMode.view
+          ? 'Category Details'
+          : 'Edit Category',
+      form: CategoryForm(ctrl),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final ctrl = CategoryController();
+
     return ZiOverOptionsActionButton(
-      title: item.name ?? 'Item',
-      positionType: ZiOverOptionsPosition.bottomSheet,
-      style: ZiOverOptionsStyle.defaults.copyWith(showItemBorder: true),
+      title: category.name,
+      positionType: ZiOverOptionsPosition.native,
       actions: [
-        // VIEW
         ZiOverOptionsAction(
           icon: Icons.visibility_rounded,
           label: 'View',
-          onTap: () {
-            final ctrl = CategoriesSliceController(formMode: ZiFormMode.view)
-              ..prefill(item);
-            ziFormView(
-              context,
-              type: ZiFormViewType.page,
-              title: 'Details',
-              form: CategoriesSliceForm(ctrl),
-            );
-          },
+          onTap: () => _openPage(context, ZiFormMode.view),
         ),
 
-        // EDIT
-        ZiOverOptionsAction(
-          icon: Icons.edit_rounded,
-          label: 'Edit',
-          onTap: () async {
-            final ctrl = CategoriesSliceController(formMode: ZiFormMode.edit)
-              ..prefill(item);
+        if (!category.isSystem) ...[
+          ZiOverOptionsAction(
+            icon: Icons.edit_rounded,
+            label: 'Edit',
+            onTap: () => _openPage(context, ZiFormMode.edit),
+          ),
 
-            final result = await ziFormView(
-              context,
-              type: ZiFormViewType.page,
-              title: 'Edit',
-              form: CategoriesSliceForm(ctrl),
-            );
-            if (result == true && onReload != null) {
-              await onReload!();
-            }
-          },
-        ),
+          ZiOverOptionsAction(
+            icon: Icons.delete_rounded,
+            label: 'Delete',
+            isDanger: true,
+            onTap: () async {
+              final confirm = await ziConfirmationDialogResult(
+                context: context,
+                actionLabel: 'Delete Category',
+                actionOn: category.name,
+                infoContent: itemCount > 0
+                    ? '(moves $itemCount items to general)'
+                    : "",
+                icon: Icons.delete_rounded,
+                colorTone: ZiColors.lossR,
+              );
 
-        // DELETE
-        ZiOverOptionsAction(
-          icon: Icons.delete_rounded,
-          label: 'Delete',
-          isDanger: true,
-          onTap: () async {
-            final confirm = await ziConfirmationDialogResult(
-              context: context,
-              actionLabel: 'Delete',
-              icon: Icons.delete_rounded,
-              colorTone: ZiColors.lossR,
-            );
-
-            if (confirm == true && onDelete != null) {
-              await onDelete!(item.uuid);
-              if (onReload != null) await onReload!();
-            }
-          },
-        ),
+              if (confirm == true) {
+                await ctrl.delete(
+                  category.uuid,
+                  CatalogType.values.firstWhere(
+                    (e) => e.name == category.catalogType,
+                  ),
+                );
+              }
+            },
+          ),
+        ],
       ],
     );
   }

@@ -1,37 +1,32 @@
-// ─── Zi_Slice: Tile ───────────────────────────────────────────────────────────
-// ROLE: Pure UI list tile. No logic. No ref. Callbacks only.
-// RULE: Never read providers here. Pass data model as param.
-// RULE: Actions widget handles all menu options — keep tile clean.
-// RENAME: XxxSliceTile → YourFeatureTile
-// ─────────────────────────────────────────────────────────────────────────────
-
-// ─── Zi_Slice: Tile ───────────────────────────────────────────────────────────
-// ROLE: Pure UI list tile. No logic. No ref. Callbacks only.
-// RULE: Never read providers here. Pass data model as param.
-// RULE: Actions widget handles all menu options — keep tile clean.
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── Zi_Slice: Tile (UI ONLY - NORMALIZED) ────────────────────────────────
+// ROLE: Pure UI list tile. No logic. No state. Callbacks only.
+// ─────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
+import 'package:storepool/app_features/items_slice/data/actions_on_tile.dart';
+import 'package:storepool/app_shell/widgets/price_text.dart';
+import 'package:storepool/app_shell/widgets/zi_info_tag.dart';
 import 'package:zi_core/zi_core_io.dart';
 
-class ItemsSliceTile extends StatelessWidget {
-  final dynamic item;       // your data model
-  final VoidCallback onTap; // tap callback
-  final Widget actions;     // trailing actions widget
+class CatalogItemTile extends StatelessWidget {
+  final Map<String, dynamic> item;
+  final String categoryName;
+  final String currencySign;
 
-  const ItemsSliceTile({
+  const CatalogItemTile({
     super.key,
     required this.item,
-    required this.onTap,
-    required this.actions,
+    required this.categoryName,
+    required this.currencySign,
   });
 
   @override
   Widget build(BuildContext context) {
-    final bool isActive = item['isActive'] ?? true;
+    final bool isActive = item["isActive"] ?? true;
 
     return InkWell(
-      onTap: isActive ? onTap : null,
+      splashColor: ZiColors.accent,
+      onTap: isActive ? () {} : null, // no logic
       child: Opacity(
         opacity: isActive ? 1.0 : 0.5,
         child: Container(
@@ -41,60 +36,109 @@ class ItemsSliceTile extends StatelessWidget {
           ),
           child: Row(
             children: [
-              /// LEFT SIDE
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    /// TITLE + STATUS
+                    // ── Title Row ───────────────────────────────
                     Row(
                       children: [
                         Expanded(
                           child: Text(
-                            item['title'] ?? 'Unnamed Service',
+                            item["title"] ?? '',
                             style: ZiTypoStyles.titleMd,
                           ),
                         ),
-                        if (!isActive)
+
+                        if (!isActive) ...{
                           Text(
                             'Inactive',
                             style: ZiTypoStyles.caption.copyWith(
                               color: ZiColors.error,
                             ),
                           ),
+                        } else ...{
+                          if ((item["stockQty"] ?? 0) > 0)
+                            ZiInfoTag(
+                              tag: 'Qty',
+                              value: item["stockQty"].toString(),
+                            ),
+
+                          if ((item["soldCount"] ?? 0) > 0)
+                            ZiInfoTag(
+                              tag: 'Sold',
+                              value: item["soldCount"].toString(),
+                            ),
+                        },
                       ],
                     ),
 
                     ziGap(4),
 
-                    /// CATEGORY + PRICE
+                    // ── SKU / Brand ─────────────────────────────
+                    Row(
+                      children: [
+                        if (item["sku"] != null)
+                          ZiInfoTag(
+                            icon: Icons.qr_code_2_rounded,
+                            value: item["sku"],
+                          ),
+
+                        if (item["brand"] != null)
+                          ZiInfoTag(
+                            icon: Icons.flag_rounded,
+                            value: item["brand"],
+                          ),
+                      ],
+                    ),
+
+                    ziGap(4),
+
+                    // ── Description ─────────────────────────────
+                    Row(
+                      children: [
+                        if (item["description"] != null) ...{
+                          Text('Des:', style: ZiTypoStyles.caption),
+                          ziGap(4),
+                          Text(
+                            item["description"],
+                            style: ZiTypoStyles.caption,
+                          ),
+                        },
+                      ],
+                    ),
+
+                    ziGap(4),
+
+                    // ── Bottom Row ─────────────────────────────
                     Row(
                       children: [
                         Text(
-                          'ID: ${item['id'] ?? 1}',
+                          (item["id"] ?? '').toString(),
                           style: ZiTypoStyles.caption,
                         ),
-                        ziGap(6),
-                        const Icon(Icons.category, size: 16, color: ZiColors.gray),
-                        ziGap(6),
-                        Text(
-                          item['categoryName'] ?? 'Services',
-                          style: ZiTypoStyles.caption,
+                        ziGap(4),
+                        Icon(
+                          Icons.category,
+                          size: 16,
+                          color: ZiColors.grayLight,
                         ),
+                        ziGap(8),
+                        Text(categoryName, style: ZiTypoStyles.caption),
                         const Spacer(),
-                        Text(
-                          'Rs ${item['price'] ?? 0}',
-                          style: ZiTypoStyles.titleSm.copyWith(fontWeight: FontWeight.bold),
+                        ZiPriceText(
+                          symbol: currencySign,
+                          value: item["price"] ?? 0,
                         ),
+                        ziGap(4),
                       ],
                     ),
                   ],
                 ),
               ),
 
-
-              /// RIGHT SIDE ACTIONS
-              // actions,
+              // ── Actions (kept as-is) ─────────────────────────
+              CatalogItemTileActions(item: item),
             ],
           ),
         ),

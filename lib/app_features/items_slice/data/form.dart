@@ -1,142 +1,179 @@
-// ─── Zi_Slice: Form ───────────────────────────────────────────────────────────
-// ROLE: Inputs + save button only. Owned by controller. No navigation logic.
-// RULE: All fields must have enabled: !ctrl.isView
-// RULE: All fields must call _onChange() in onChanged
-// RULE: Non-text fields must call ctrl.notify() directly
-// RULE: Save button uses ValueListenableBuilder(ctrl.canSaveNotifier)
-// RENAME: XxxSliceForm → YourFeatureForm
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── Zi_Slice: Form (UI ONLY - NORMALIZED) ───────────────────────────────
+// ROLE: Pure UI form. No controller, no backend.
+// ────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
 import 'package:zi_core/zi_core_io.dart';
 
-import '../a_items_slice_io.dart';
+class CatalogForm extends StatefulWidget with ZiFormMixin {
+  const CatalogForm({super.key});
 
-class ItemsSliceForm extends StatefulWidget with ZiFormMixin {
-  final ItemsSliceController ctrl;
-
-  final Future<bool> Function(String name, String category, String type,
-      double price, bool active)? onSubmit;
-  final Future<bool> Function(String uuid, String name, String category,
-      String type, double price, bool active)? onUpdate;
-
-  const ItemsSliceForm(
-    this.ctrl, {
-    super.key,
-    this.onSubmit,
-    this.onUpdate,
-  });
+  // ── ZiFormMixin (dummy) ───────────────────────────────────────────────
+  @override
+  ValueNotifier<bool> get hasChanges => ValueNotifier(true);
 
   @override
-  ValueNotifier<bool> get hasChanges => ctrl.hasChangesNotifier;
+  ZiFormMode get mode => ZiFormMode.add;
 
   @override
-  ZiFormMode get mode => ctrl.formMode;
+  VoidCallback? get onClose => null;
 
   @override
-  VoidCallback? get onClose => ctrl.dispose;
-
-  @override
-  State<ItemsSliceForm> createState() => _ItemsSliceFormState();
+  State<CatalogForm> createState() => _CatalogFormState();
 }
 
-class _ItemsSliceFormState extends State<ItemsSliceForm> {
-  ItemsSliceController get ctrl => widget.ctrl;
+class _CatalogFormState extends State<CatalogForm> {
+  final _formKey = GlobalKey<FormState>();
+
+  // ── controllers ──────────────────────────────────────────────────────
+  final nameCtrl = TextEditingController();
+  final priceCtrl = TextEditingController();
+  final skuCtrl = TextEditingController();
+  final brandCtrl = TextEditingController();
+  final stockCtrl = TextEditingController();
+  final descCtrl = TextEditingController();
+
+  bool showMore = false;
+
+  // ── dummy categories ─────────────────────────────────────────────────
+  final List<Map<String, String>> categories = [
+    {"uuid": "1", "name": "General"},
+    {"uuid": "2", "name": "Electronics"},
+  ];
+
+  Map<String, String>? selectedCategory;
 
   void _onChange() {
     setState(() {});
-    ctrl.notify();
   }
 
-  Future<void> _onAction() async {
-    final ok = ctrl.isEdit
-        ? await ctrl.update(widget.onUpdate)
-        : await ctrl.submit(widget.onSubmit);
+  void _onSave() {
+    if (!_formKey.currentState!.validate()) return;
 
-    if (!mounted) return;
-    if (ok) Navigator.pop(context, true);
+    Navigator.pop(context, true); // UI فقط
   }
 
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: ctrl.formKey,
-      child: Column(
+      key: _formKey,
+      child: ListView(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         children: [
+          // ── name ─────────────────────────────────────────────
           ZiInput(
-            label: 'Item Title',
-            controller: ctrl.nameCtrl,
-            enabled: !ctrl.isView,
+            label: 'Name *',
+            variant: ZiInputVariant.stacked,
+            controller: nameCtrl,
+            enabled: true,
             onChanged: (_) => _onChange(),
-            validator: (v) => v!.isEmpty ? 'Required' : null,
+            validator: (v) => v == null || v.isEmpty ? 'Name required' : null,
           ),
-          ziGap(10),
- ZiInput(
-            label: 'Price',
-            controller: ctrl.priceCtrl,
-            // keyboardType: TextInputType.number,
-            enabled: !ctrl.isView,
-            onChanged: (_) => _onChange(),
-            validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
-          ),
-          ziGap(10),
-          ZiSelectB<String>(
-            label: 'Category',
-            items: ctrl.categories,
-            value: ctrl.category,
-            itemLabel: (c) => c,
-            enabled: !ctrl.isView,
-            onChanged: (v) {
-              ctrl.category = v;
-              ctrl.notify();
-            },
-          ),
-          ziGap(10),
+          ziGap(12),
 
-          ZiSelectB<String>(
-            label: 'Type',
-            items: ctrl.types,
-            value: ctrl.type,
-            itemLabel: (t) => t,
-            enabled: !ctrl.isView,
-            onChanged: (v) {
-              ctrl.type = v;
-              ctrl.notify();
-            },
-          ),
-          ziGap(10),
-
-         
-          ZiSwitch(
-            // label: 'Active',
-            value: ctrl.active,
-            onChanged: (v) {
-              ctrl.active = v;
-              ctrl.notify();
-            },
+          // ── category + price ────────────────────────────────
+          Row(
+            children: [
+              SizedBox(
+                width: 150,
+                child: ZiSelectB<Map<String, String>>(
+                  label: 'Category',
+                  hint: 'General',
+                  items: categories,
+                  value: selectedCategory,
+                  itemLabel: (e) => e["name"] ?? '',
+                  onChanged: (v) {
+                    setState(() => selectedCategory = v);
+                  },
+                ),
+              ),
+              ziGap(12),
+              Expanded(
+                child: ZiInput(
+                  label: 'Price *',
+                  variant: ZiInputVariant.stacked,
+                  controller: priceCtrl,
+                  enabled: true,
+                  onChanged: (_) => _onChange(),
+                  validator:
+                      (v) => v == null || v.isEmpty ? 'Price required' : null,
+                ),
+              ),
+            ],
           ),
 
-          // ZiToggleB(
-          //   label: 'Available',
-          //   value: ctrl.active,
-          //   enabled: !ctrl.isView,
-          //   onChanged: (v) {
-          //     ctrl.active = v;
-          //     ctrl.notify();
-          //   },
-          // ),
+          ziGap(12),
+
+          // ── more toggle ─────────────────────────────────────
+          ZiSwitchB(
+            subtitle: "you can add more info",
+            value: showMore,
+            label: "Add More",
+            onChanged: (value) {
+              setState(() => showMore = value);
+            },
+          ),
+
+          // ── optional fields ────────────────────────────────
+          if (showMore) ...[
+            const Divider(),
+            ZiInput(
+              label: 'SKU / BarCode',
+              variant: ZiInputVariant.stacked,
+              controller: skuCtrl,
+              enabled: true,
+              onChanged: (_) => _onChange(),
+            ),
+            ziGap(12),
+            Row(
+              children: [
+                Expanded(
+                  child: ZiInput(
+                    label: 'Brand',
+                    variant: ZiInputVariant.stacked,
+                    controller: brandCtrl,
+                    enabled: true,
+                    onChanged: (_) => _onChange(),
+                  ),
+                ),
+                ziGap(12),
+                Expanded(
+                  child: ZiInput(
+                    label: 'Stock Qty',
+                    variant: ZiInputVariant.stacked,
+                    controller: stockCtrl,
+                    enabled: true,
+                    onChanged: (_) => _onChange(),
+                  ),
+                ),
+              ],
+            ),
+            ziGap(12),
+            ZiInput(
+              label: 'Description',
+              variant: ZiInputVariant.stacked,
+              type: ZiInputType.multiline,
+              controller: descCtrl,
+              enabled: true,
+              onChanged: (_) => _onChange(),
+            ),
+          ],
+
           ziGap(20),
 
-          if (!ctrl.isView)
-            ValueListenableBuilder<bool>(
-              valueListenable: ctrl.canSaveNotifier,
-              builder: (_, canSave, __) => ZiButtonB(
-                expand: true,
-                label: ctrl.actionLabel,
-                disabled: !canSave,
-                action: _onAction,
-              ),
-            ),
+          // ── info message (static) ──────────────────────────
+          ZiStateIndicator(
+            message: 'Fill required * fields to continue',
+            tone: ZiStateTone.info,
+          ),
+
+          // ── save button ───────────────────────────────────
+          ZiButtonB(
+            expand: true,
+            label: 'Save',
+            action: _onSave,
+          ),
         ],
       ),
     );

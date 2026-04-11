@@ -207,3 +207,17 @@ extension StoreCurrencyX on StoreCurrency {
     }
   }
 }
+
+
+
+enum CatalogType {
+  product,
+  service;
+
+  String get label {
+    switch (this) {
+      case CatalogType.product: return 'Product';
+      case CatalogType.service: return 'Service';
+    }
+  }
+}

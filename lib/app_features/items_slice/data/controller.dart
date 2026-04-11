@@ -1,65 +1,74 @@
-// ─── Zi_Slice: Controller ─────────────────────────────────────────────────────
-// ROLE: Form state only. Validation, notifiers, submit, update, dispose.
-// RULE: Never access BuildContext. Never navigate. Never show dialogs.
-// RULE: notify() must be called on every field change.
-// RULE: prefill() must snapshot originals at the end then call notify().
-// RENAME: XxxSliceController → YourFeatureController
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── Zi_Slice: Controller (UI ONLY - NORMALIZED) ─────────────────────────
+// ROLE: Form state only. No backend, no providers.
+// ─────────────────────────────────────────────────────────────────────────
 
 import 'package:flutter/material.dart';
+import 'package:storepool/app_models/catalog_items_table_data.dart';
 import 'package:zi_core/zi_core_io.dart';
 
-class ItemsSliceController {
+class CatalogController {
   ZiFormMode formMode;
 
-  ItemsSliceController({this.formMode = ZiFormMode.add}) {
+  CatalogController({this.formMode = ZiFormMode.add}) {
     _update();
   }
 
+  // ── form ──────────────────────────────────────────────────────────────
   final formKey = GlobalKey<FormState>();
 
-  // Fields
   final nameCtrl = TextEditingController();
   final priceCtrl = TextEditingController();
-  String? category;
-  String? type;
-  bool active = true;
+  final skuCtrl = TextEditingController();
+  final brandCtrl = TextEditingController();
+  final stockCtrl = TextEditingController();
+  final descCtrl = TextEditingController();
 
-  // Dummy options
-  final categories = ['Electronics', 'Furniture', 'Clothing'];
-  final types = ['Product', 'Service'];
-
-  // State
+  // ── notifiers ─────────────────────────────────────────────────────────
   final canSaveNotifier = ValueNotifier<bool>(false);
   final hasChangesNotifier = ValueNotifier<bool>(false);
 
+  // ── non-text fields ───────────────────────────────────────────────────
+  CatalogType selectedType = CatalogType.product;
+  String? selectedCategoryUuid;
+  bool showMore = false;
+
   String? existingUuid;
 
-  // Originals
+  // ── originals (for change detection) ──────────────────────────────────
   String _origName = '';
-  String? _origCategory;
-  String? _origType;
-  bool _origActive = true;
+  String _origPrice = '';
+  String _origSku = '';
+  String _origBrand = '';
+  String _origStock = '';
+  String _origDesc = '';
+  CatalogType _origType = CatalogType.product;
+  String? _origCategoryUuid;
 
+  // ── modes ─────────────────────────────────────────────────────────────
   bool get isAdd => formMode == ZiFormMode.add;
   bool get isEdit => formMode == ZiFormMode.edit;
   bool get isView => formMode == ZiFormMode.view;
 
-  String get actionLabel => isEdit ? 'Update' : 'Save';
+  String get actionLabel => isEdit ? 'Update' : 'Add';
 
-  // Validation
+  // ── computed ──────────────────────────────────────────────────────────
   bool get _canSave =>
-      nameCtrl.text.trim().isNotEmpty &&
-      category != null &&
-      type != null &&
-      priceCtrl.text.trim().isNotEmpty;
+      isAdd
+          ? nameCtrl.text.trim().isNotEmpty &&
+              priceCtrl.text.trim().isNotEmpty
+          : _hasChanges;
 
   bool get _hasChanges =>
       nameCtrl.text.trim() != _origName ||
-      category != _origCategory ||
-      type != _origType ||
-      active != _origActive;
+      priceCtrl.text.trim() != _origPrice ||
+      skuCtrl.text.trim() != _origSku ||
+      brandCtrl.text.trim() != _origBrand ||
+      stockCtrl.text.trim() != _origStock ||
+      descCtrl.text.trim() != _origDesc ||
+      selectedType != _origType ||
+      selectedCategoryUuid != _origCategoryUuid;
 
+  // ── notify ────────────────────────────────────────────────────────────
   void notify() => _update();
 
   void _update() {
@@ -67,66 +76,64 @@ class ItemsSliceController {
     hasChangesNotifier.value = _hasChanges;
   }
 
-  // Prefill
-  void prefill(dynamic data) {
-    existingUuid = data.uuid;
+  // ── prefill (for edit/view UI) ────────────────────────────────────────
+  void prefill(Map<String, dynamic> item) {
+    existingUuid = item["uuid"];
 
-    nameCtrl.text = data.name ?? '';
-    priceCtrl.text = data.price?.toString() ?? '';
-    category = data.category;
-    type = data.type;
-    active = data.active ?? true;
+    nameCtrl.text = item["title"] ?? '';
+    priceCtrl.text = (item["price"] ?? 0).toString();
+    skuCtrl.text = item["sku"] ?? '';
+    brandCtrl.text = item["brand"] ?? '';
+    stockCtrl.text = (item["stockQty"] ?? 0).toString();
+    descCtrl.text = item["description"] ?? '';
 
+    selectedCategoryUuid = item["categoryUuid"];
+
+    showMore =
+        skuCtrl.text.isNotEmpty ||
+        brandCtrl.text.isNotEmpty ||
+        descCtrl.text.isNotEmpty;
+
+    // snapshot originals
     _origName = nameCtrl.text;
-    _origCategory = category;
-    _origType = type;
-    _origActive = active;
+    _origPrice = priceCtrl.text;
+    _origSku = skuCtrl.text;
+    _origBrand = brandCtrl.text;
+    _origStock = stockCtrl.text;
+    _origDesc = descCtrl.text;
+    _origType = selectedType;
+    _origCategoryUuid = selectedCategoryUuid;
 
     _update();
   }
 
-  // Submit
-  Future<bool> submit(Future<bool> Function(String name, String category, String type,
-      double price, bool active)? onSubmit) async {
+  // ── submit (UI ONLY) ──────────────────────────────────────────────────
+  Future<bool> submit() async {
     if (!formKey.currentState!.validate()) return false;
 
-    if (onSubmit != null) {
-      return await onSubmit(
-        nameCtrl.text.trim(),
-        category!,
-        type!,
-        double.tryParse(priceCtrl.text.trim()) ?? 0,
-        active,
-      );
-    }
+    // simulate success (no backend)
+    await Future.delayed(const Duration(milliseconds: 300));
 
-    return false;
+    return true;
   }
 
-  // Update
-  Future<bool> update(
-      Future<bool> Function(String uuid, String name, String category, String type,
-              double price, bool active)?
-          onUpdate) async {
+  // ── update (UI ONLY) ──────────────────────────────────────────────────
+  Future<bool> update(String uuid) async {
     if (!formKey.currentState!.validate()) return false;
 
-    if (onUpdate != null && existingUuid != null) {
-      return await onUpdate(
-        existingUuid!,
-        nameCtrl.text.trim(),
-        category!,
-        type!,
-        double.tryParse(priceCtrl.text.trim()) ?? 0,
-        active,
-      );
-    }
+    await Future.delayed(const Duration(milliseconds: 300));
 
-    return false;
+    return true;
   }
 
+  // ── dispose ───────────────────────────────────────────────────────────
   void dispose() {
     nameCtrl.dispose();
     priceCtrl.dispose();
+    skuCtrl.dispose();
+    brandCtrl.dispose();
+    stockCtrl.dispose();
+    descCtrl.dispose();
     canSaveNotifier.dispose();
     hasChangesNotifier.dispose();
   }

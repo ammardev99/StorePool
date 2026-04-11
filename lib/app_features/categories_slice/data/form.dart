@@ -1,28 +1,11 @@
-// ─── Zi_Slice: Form ───────────────────────────────────────────────────────────
-// ROLE: Inputs + save button only. Owned by controller. No navigation logic.
-// RULE: All fields must have enabled: !ctrl.isView
-// RULE: All fields must call _onChange() in onChanged
-// RULE: Non-text fields must call ctrl.notify() directly
-// RULE: Save button uses ValueListenableBuilder(ctrl.canSaveNotifier)
-// ─────────────────────────────────────────────────────────────────────────────
-
 import 'package:flutter/material.dart';
 import 'package:zi_core/zi_core_io.dart';
+import 'controller.dart';
 
-import '../a_categories_slice_io.dart';
+class CategoryForm extends StatefulWidget with ZiFormMixin {
+  final CategoryController ctrl;
 
-class CategoriesSliceForm extends StatefulWidget with ZiFormMixin {
-  final CategoriesSliceController ctrl;
-
-  final Future<bool> Function(String name, String type, int sort, bool active)? onSubmit;
-  final Future<bool> Function(String uuid, String name, String type, int sort, bool active)? onUpdate;
-
-  const CategoriesSliceForm(
-    this.ctrl, {
-    super.key,
-    this.onSubmit,
-    this.onUpdate,
-  });
+  const CategoryForm(this.ctrl, {super.key});
 
   @override
   ValueNotifier<bool> get hasChanges => ctrl.hasChangesNotifier;
@@ -34,11 +17,11 @@ class CategoriesSliceForm extends StatefulWidget with ZiFormMixin {
   VoidCallback? get onClose => ctrl.dispose;
 
   @override
-  State<CategoriesSliceForm> createState() => _CategoriesSliceFormState();
+  State<CategoryForm> createState() => _CategoryFormState();
 }
 
-class _CategoriesSliceFormState extends State<CategoriesSliceForm> {
-  CategoriesSliceController get ctrl => widget.ctrl;
+class _CategoryFormState extends State<CategoryForm> {
+  CategoryController get ctrl => widget.ctrl;
 
   void _onChange() {
     setState(() {});
@@ -47,8 +30,8 @@ class _CategoriesSliceFormState extends State<CategoriesSliceForm> {
 
   Future<void> _onAction() async {
     final ok = ctrl.isEdit
-        ? await ctrl.update(widget.onUpdate)
-        : await ctrl.submit(widget.onSubmit);
+        ? await ctrl.update(ctrl.origUuid)
+        : await ctrl.submit();
 
     if (!mounted) return;
     if (ok) Navigator.pop(context, true);
@@ -58,74 +41,45 @@ class _CategoriesSliceFormState extends State<CategoriesSliceForm> {
   Widget build(BuildContext context) {
     return Form(
       key: ctrl.formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListView(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         children: [
-          // Category Title
           ZiInput(
-            label: 'Category Title',
+            label: 'Category Name *',
+            variant: ZiInputVariant.stacked,
             controller: ctrl.nameCtrl,
             enabled: !ctrl.isView,
             onChanged: (_) => _onChange(),
-            validator: (v) => v!.isEmpty ? 'Required' : null,
+            validator: (v) => v == null || v.isEmpty ? 'Name required' : null,
           ),
-
           ziGap(16),
 
-          // Type using ZiSelectB
-          ZiSelectB<String>(
-            label: 'Type',
-            items: const ['product', 'service'],
-            value: ctrl.type,
-            itemLabel: (e) => e == 'product' ? 'Product' : 'Service',
-            enabled: !ctrl.isView,
-            onChanged: (val) {
-              ctrl.type = val ?? 'product';
-              _onChange();
-            },
-          ),
+          if (!ctrl.isView)
+            ValueListenableBuilder<bool>(
+              valueListenable: ctrl.canSaveNotifier,
+              builder: (_, canSave, __) {
+                final msg = !canSave
+                    ? ctrl.isAdd
+                        ? 'Fill required * fields to continue'
+                        : 'No changes to update'
+                    : null;
 
-          ziGap(16),
+                if (msg == null) return const SizedBox.shrink();
 
-          // Sort Order
-          ZiInput(
-            label: 'Sort Order',
-            controller: ctrl.sortCtrl,
-            enabled: !ctrl.isView,
-            // keyboardType: TextInputType.number,
-            onChanged: (_) => _onChange(),
-            validator: (v) {
-              if (v == null || v.isEmpty) return 'Required';
-              if (int.tryParse(v) == null) return 'Enter a number';
-              return null;
-            },
-          ),
+                return ZiStateIndicator(
+                  message: msg,
+                  tone: ZiStateTone.info,
+                );
+              },
+            ),
 
-          ziGap(16),
-
-          // Active Toggle
-          ZiSwitch(
-            // label: 'Active',
-            value: ctrl.isActive,
-            
-            
-
-            // enabled: !ctrl.isView,
-            onChanged: (val) {
-              ctrl.isActive = val;
-              _onChange();
-            },
-          ),
-
-          ziGap(24),
-
-          // Save Button
           if (!ctrl.isView)
             ValueListenableBuilder<bool>(
               valueListenable: ctrl.canSaveNotifier,
               builder: (_, canSave, __) => ZiButtonB(
                 expand: true,
-                label: ctrl.actionLabel,
+                label: ctrl.isEdit ? 'Update Category' : 'Create Category',
                 disabled: !canSave,
                 action: _onAction,
               ),

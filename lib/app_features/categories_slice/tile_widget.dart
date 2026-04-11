@@ -1,23 +1,10 @@
-// ─── Zi_Slice: Tile ───────────────────────────────────────────────────────────
-// ROLE: Pure UI list tile. No logic. No ref. Callbacks only.
-// RULE: Never read providers here. Pass data model as param.
-// RULE: Actions widget handles all menu options — keep tile clean.
-// RENAME: XxxSliceTile → YourFeatureTile
-// ─────────────────────────────────────────────────────────────────────────────
-
 import 'package:flutter/material.dart';
 import 'package:zi_core/zi_core_io.dart';
 
-/// ─── Zi_Slice: Tile ───────────────────────────────────────────────────────────
-/// ROLE: Pure UI list tile. No logic. No ref. Callbacks only.
-/// RULE: Never read providers here. Pass data model as param.
-/// RULE: Actions widget handles all menu options — keep tile clean.
-/// ─────────────────────────────────────────────────────────────────────────────
-
 class CategoriesSliceTile extends StatelessWidget {
-  final dynamic item; // your data model
-  final VoidCallback onTap; // click callback
-  final Widget actions; // actions widget (like menu buttons)
+  final dynamic item;
+  final VoidCallback onTap;
+  final Widget actions;
 
   const CategoriesSliceTile({
     super.key,
