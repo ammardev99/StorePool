@@ -13,24 +13,30 @@ class CatalogCategoriesTableData {
     required this.isSystem,
   });
 
+  // 🔥 FROM FIREBASE
+  factory CatalogCategoriesTableData.fromMap(Map<String, dynamic> map) {
+    return CatalogCategoriesTableData(
+      uuid: map['uuid'] ?? '',
+      name: map['name'] ?? '',
+      catalogType: map['type'] ?? 'product', // 🔥 IMPORTANT
+      isSystem: map['isSystem'] ?? false,
+    );
+  }
+
+  // 🔥 TO FIREBASE (future use)
+  Map<String, dynamic> toMap() {
+    return {
+      "uuid": uuid,
+      "name": name,
+      "type": catalogType,
+      "isSystem": isSystem,
+    };
+  }
+
   CatalogType get typeEnum {
     return CatalogType.values.firstWhere(
       (e) => e.name == catalogType,
       orElse: () => CatalogType.product,
-    );
-  }
-
-  CatalogCategoriesTableData copyWith({
-    String? uuid,
-    String? name,
-    String? catalogType,
-    bool? isSystem,
-  }) {
-    return CatalogCategoriesTableData(
-      uuid: uuid ?? this.uuid,
-      name: name ?? this.name,
-      catalogType: catalogType ?? this.catalogType,
-      isSystem: isSystem ?? this.isSystem,
     );
   }
 }

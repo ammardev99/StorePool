@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:storepool/firebase_services/store/catalog_category_service.dart';
+import 'package:zi_core/zi_core_io.dart';
 import 'package:storepool/app_models/catalog_categories_table_data.dart';
 import 'package:storepool/data/store_enums.dart';
-import 'package:zi_core/zi_core_io.dart';
 
 class CategoryController {
   ZiFormMode formMode;
+  final String storeId;
 
-  CategoryController({this.formMode = ZiFormMode.add}) {
-    _sync();
+  CategoryController({
+    required this.storeId,
+    this.formMode = ZiFormMode.add,
+  }) {
+    sync();
   }
+
+  final service = CatalogCategoryService();
 
   final formKey = GlobalKey<FormState>();
   final nameCtrl = TextEditingController();
@@ -17,26 +24,26 @@ class CategoryController {
   final hasChangesNotifier = ValueNotifier<bool>(false);
 
   CatalogType selectedType = CatalogType.product;
-
+  bool isLoading = false;
   String origUuid = '';
   String origName = '';
-  CatalogType _origType = CatalogType.product;
+  CatalogType origType = CatalogType.product;
 
   bool get isAdd => formMode == ZiFormMode.add;
   bool get isEdit => formMode == ZiFormMode.edit;
   bool get isView => formMode == ZiFormMode.view;
-
-  bool get _hasChanges =>
-      nameCtrl.text.trim() != origName || selectedType != _origType;
+ 
+  bool get hasChanges =>
+      nameCtrl.text.trim() != origName || selectedType != origType;
 
   bool get _canSave =>
-      isAdd ? nameCtrl.text.trim().isNotEmpty : _hasChanges;
+      isAdd ? nameCtrl.text.trim().isNotEmpty : hasChanges;
 
-  void notify() => _sync();
+  void notify() => sync();
 
-  void _sync() {
+  void sync() {
     canSaveNotifier.value = _canSave;
-    hasChangesNotifier.value = _hasChanges;
+    hasChangesNotifier.value = hasChanges;
   }
 
   void prefill(CatalogCategoriesTableData category) {
@@ -46,29 +53,40 @@ class CategoryController {
     selectedType = category.typeEnum;
 
     origName = category.name;
-    _origType = selectedType;
+    origType = selectedType;
 
-    _sync();
+    sync();
   }
 
-  /// =========================
-  /// 🟢 DUMMY OPERATIONS ONLY
-  /// =========================
-
+  // 🔥 CREATE
   Future<bool> submit() async {
     if (!formKey.currentState!.validate()) return false;
-    await Future.delayed(const Duration(milliseconds: 300));
+
+    await service.createCategory(
+      storeId: storeId,
+      name: nameCtrl.text.trim(),
+      type: selectedType.name,
+    );
+
     return true;
   }
 
+  // 🔥 UPDATE
   Future<bool> update(String uuid) async {
     if (!formKey.currentState!.validate()) return false;
-    await Future.delayed(const Duration(milliseconds: 300));
+
+    await service.updateCategory(
+      storeId: storeId,
+      uuid: uuid,
+      name: nameCtrl.text.trim(),
+    );
+
     return true;
   }
 
-  Future<void> delete(String uuid, CatalogType type) async {
-    await Future.delayed(const Duration(milliseconds: 200));
+  // 🔥 DELETE
+  Future<void> delete(String uuid) async {
+    await service.deleteCategory(storeId: storeId, uuid: uuid);
   }
 
   void dispose() {

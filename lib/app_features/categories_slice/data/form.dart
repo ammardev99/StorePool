@@ -17,24 +17,31 @@ class CategoryForm extends StatefulWidget with ZiFormMixin {
   VoidCallback? get onClose => ctrl.dispose;
 
   @override
-  State<CategoryForm> createState() => _CategoryFormState();
+  State<CategoryForm> createState() => CategoryFormState();
 }
 
-class _CategoryFormState extends State<CategoryForm> {
+class CategoryFormState extends State<CategoryForm> {
   CategoryController get ctrl => widget.ctrl;
 
-  void _onChange() {
+  void onChange() {
     setState(() {});
     ctrl.notify();
   }
 
-  Future<void> _onAction() async {
-    final ok = ctrl.isEdit
-        ? await ctrl.update(ctrl.origUuid)
-        : await ctrl.submit();
+  Future<void> onAction() async {
+    setState(() => ctrl.isLoading = true);
+    try {
+      final ok = ctrl.isEdit
+          ? await ctrl.update(ctrl.origUuid)
+          : await ctrl.submit();
 
-    if (!mounted) return;
-    if (ok) Navigator.pop(context, true);
+      if (!mounted) return;
+      if (ok) Navigator.pop(context, true);
+    } catch (e) {
+      debugPrint("Category Form Action Error: $e");
+    } finally {
+      if (mounted) setState(() => ctrl.isLoading = false);
+    }
   }
 
   @override
@@ -50,7 +57,7 @@ class _CategoryFormState extends State<CategoryForm> {
             variant: ZiInputVariant.stacked,
             controller: ctrl.nameCtrl,
             enabled: !ctrl.isView,
-            onChanged: (_) => _onChange(),
+            onChanged: (_) => onChange(),
             validator: (v) => v == null || v.isEmpty ? 'Name required' : null,
           ),
           ziGap(16),
@@ -79,9 +86,10 @@ class _CategoryFormState extends State<CategoryForm> {
               valueListenable: ctrl.canSaveNotifier,
               builder: (_, canSave, __) => ZiButtonB(
                 expand: true,
+                loading: ctrl.isLoading,
                 label: ctrl.isEdit ? 'Update Category' : 'Create Category',
                 disabled: !canSave,
-                action: _onAction,
+                action: onAction,
               ),
             ),
         ],

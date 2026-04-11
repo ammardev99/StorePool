@@ -71,6 +71,12 @@ Order Success Screen
 
 
 `Today's Complete`
+> 11 April 2026
+-item slice ui
+---
+> 10 April 2026
+-category slice ui
+---
 > 9 April 2026
 > -enable store setting menu
 -setup the store menu

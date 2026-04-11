@@ -5,95 +5,86 @@ import 'package:storepool/app_features/categories_slice/data/form.dart';
 import 'package:storepool/app_features/categories_slice/tile_widget.dart';
 import 'package:storepool/app_models/catalog_categories_table_data.dart';
 import 'package:storepool/data/store_enums.dart';
+import 'package:storepool/firebase_services/store/catalog_category_service.dart';
 import 'package:zi_core/zi_core_io.dart';
 
 class CategoriesSliceView extends StatefulWidget {
-  const CategoriesSliceView({super.key});
+  final String storeId;
+  const CategoriesSliceView({super.key, required this.storeId});
 
   @override
-  State<CategoriesSliceView> createState() => _CategoriesSliceViewState();
+  State<CategoriesSliceView> createState() => CategoriesSliceViewState();
 }
-  
-class _CategoriesSliceViewState extends State<CategoriesSliceView>
-    with SingleTickerProviderStateMixin {
-  late final TabController _tabController;
 
-  CatalogType _activeType = CatalogType.product;
+class CategoriesSliceViewState extends State<CategoriesSliceView>
+    with SingleTickerProviderStateMixin {
+  late final TabController tabController;
+
+  CatalogType activeType = CatalogType.product;
 
   List<CatalogCategoriesTableData> categories = [];
   Map<String, int> itemCounts = {};
 
   bool isLoading = false;
 
+  final service = CatalogCategoryService();
+
+  String get storeId => widget.storeId;
+
   @override
   void initState() {
     super.initState();
 
-    _tabController = TabController(
+    tabController = TabController(
       length: CatalogType.values.length,
       vsync: this,
     );
 
-    _tabController.addListener(() {
-      if (_tabController.indexIsChanging) return;
+    tabController.addListener(() {
+      if (tabController.indexIsChanging) return;
 
-      _activeType = CatalogType.values[_tabController.index];
-      _load();
+      activeType = CatalogType.values[tabController.index];
+      load();
     });
 
-    _load();
+    load();
   }
 
-  Future<void> _load() async {
+  // ─────────────────────────────────────────────────────────────
+  // 🔥 FIREBASE LOADING
+  // ─────────────────────────────────────────────────────────────
+  Future<void> load() async {
     setState(() => isLoading = true);
 
-    await Future.delayed(const Duration(milliseconds: 200));
+    try {
+      final data = await service.getCategories(
+        storeId: storeId,
+        type: activeType.name,
+      );
 
-    final data = _dummyData();
+      final parsed =
+          data.map((e) => CatalogCategoriesTableData.fromMap(e)).toList();
 
-    setState(() {
-      categories = data
-          .where((e) => e.catalogType == _activeType.name)
-          .toList();
+      setState(() {
+        categories = parsed;
 
-      itemCounts = {
-        for (final e in data) e.uuid: (e.uuid.hashCode % 8).abs()
-      };
+        // optional placeholder counts (replace later with item aggregation)
+        itemCounts = {for (final e in parsed) e.uuid: 0};
 
-      isLoading = false;
-    });
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        categories = [];
+        isLoading = false;
+      });
+    }
   }
 
-  /// =========================
-  /// 🟡 DUMMY DATA SOURCE
-  /// =========================
-  List<CatalogCategoriesTableData> _dummyData() {
-    return const [
-      CatalogCategoriesTableData(
-        uuid: "1",
-        name: "Electronics",
-        catalogType: "product",
-        isSystem: false,
-      ),
-      CatalogCategoriesTableData(
-        uuid: "2",
-        name: "Fashion",
-        catalogType: "product",
-        isSystem: false,
-      ),
-      CatalogCategoriesTableData(
-        uuid: "3",
-        name: "Grocery",
-        catalogType: "product",
-        isSystem: true,
-      ),
-      CatalogCategoriesTableData(
-        uuid: "4",
-        name: "Home Cleaning",
-        catalogType: "service",
-        isSystem: false,
-      ),
-    ];
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -109,56 +100,64 @@ class _CategoriesSliceViewState extends State<CategoriesSliceView>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ZiTabBar(
-                  controller: _tabController,
+                  controller: tabController,
                   type: ZiTabBarType.filter,
-                  tabs: CatalogType.values
-                      .map((e) => Tab(text: e.label))
-                      .toList(),
+                  tabs:
+                      CatalogType.values
+                          .map((e) => Tab(text: e.label))
+                          .toList(),
                 ),
                 Text(
-                  "${_activeType.label}s List (${categories.length})",
+                  "${activeType.label}s List (${categories.length})",
                   style: ZiTypoStyles.titleSm,
                 ),
               ],
             ),
           ),
+
           const Divider(),
 
           Expanded(
-            child: isLoading && categories.isEmpty
-                ? const Center(child: CircularProgressIndicator())
-                : categories.isEmpty
+            child:
+                isLoading && categories.isEmpty
+                    ? const Center(child: CircularProgressIndicator())
+                    : categories.isEmpty
                     ? ZiNotFoundStateInfo()
                     : ListView.builder(
-                        itemCount: categories.length,
-                        itemBuilder: (_, i) {
-                          final cat = categories[i];
+                      itemCount: categories.length,
+                      itemBuilder: (_, i) {
+                        final cat = categories[i];
 
-                          return CategoriesSliceTile(
-                            item: cat,
-                            onTap: () {},
-                            actions: ActionsOnCategory(
-                              category: cat,
-                              itemCount: itemCounts[cat.uuid] ?? 0,
-                            ),
-                          );
-                        },
-                      ),
+                        return CategoriesSliceTile(
+                          item: cat,
+                          onTap: () {},
+                          actions: ActionsOnCategory(
+                            category: cat,
+                            itemCount: itemCounts[cat.uuid] ?? 0,
+                          ),
+                        );
+                      },
+                    ),
           ),
         ],
       ),
 
       floatingActionButton: ZiFABIconBtn(
-        onTap: () {
+        onTap: () async {
           final ctrl = CategoryController(
+            storeId: storeId,
             formMode: ZiFormMode.add,
-          )..selectedType = _activeType;
+          )..selectedType = activeType;
 
-          ziFormView(
+          final result = await ziFormView(
             context,
-            title: 'Add ${_activeType.label} Category',
+            title: 'Add ${activeType.label} Category',
             form: CategoryForm(ctrl),
           );
+
+          if (result == true) {
+            load(); // 🔥 refresh after create/update
+          }
         },
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:storepool/app_features/order_history_slice/view_ui.dart';
+import 'package:storepool/firebase_services/store/store_service.dart';
 
 import 'package:zi_core/zi_core_io.dart';
 import '../app_shell/app_shell_io.dart';
@@ -16,22 +17,50 @@ class StorePoolAppView extends StatefulWidget {
 
 class _StorePoolAppViewState extends State<StorePoolAppView> {
   int pageIndex = 0;
-  List mainPavesView = [
-    // Bottom bar
-    // - Dashboard,
-    DashboardSliceView(),
-    // - Categories,
-    CategoriesSliceView(),
-    // - Items,
-    ItemsSliceView(),
+  String? _storeId;
+  bool isLoading = true;
 
-    // - Web,
-    // - Orders,
-    // OrdersSliceView(),
-    OrderHistorySliceView(),
-    // - Menu
-    MenuView(),
-  ];
+  final _storeService = StoreService();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadActiveStore();
+  }
+
+  Future<void> _loadActiveStore() async {
+    try {
+      final stores = await _storeService.getUserStores();
+      if (stores.isNotEmpty) {
+        setState(() {
+          _storeId = stores.first.id;
+          isLoading = false;
+        });
+      } else {
+        setState(() => isLoading = false);
+      }
+    } catch (e) {
+      debugPrint("Error loading store: $e");
+      setState(() => isLoading = false);
+    }
+  }
+
+  List get mainPavesView => [
+        // Bottom bar
+        // - Dashboard,
+        const DashboardSliceView(),
+        // - Categories,
+        CategoriesSliceView(storeId: _storeId ?? ""),
+        // - Items,
+        const ItemsSliceView(),
+
+        // - Web,
+        // - Orders,
+        // OrdersSliceView(),
+        const OrderHistorySliceView(),
+        // - Menu
+        const MenuView(),
+      ];
   List<TabItem> mainPages = [
     //     Bottom bar
     // - Dashboard,
@@ -50,6 +79,12 @@ class _StorePoolAppViewState extends State<StorePoolAppView> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const ZiScaffoldB(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return ZiScaffoldB(
       showPagePadding: false,
       body: mainPavesView[pageIndex],

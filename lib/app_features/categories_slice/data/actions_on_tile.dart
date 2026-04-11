@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:storepool/app_models/catalog_categories_table_data.dart';
-import 'package:storepool/data/store_enums.dart';
 import 'package:zi_core/zi_core_io.dart';
 import 'form.dart';
 import 'controller.dart';
-
 class ActionsOnCategory extends StatelessWidget {
   final CatalogCategoriesTableData category;
   final int itemCount;
@@ -15,8 +13,11 @@ class ActionsOnCategory extends StatelessWidget {
     required this.itemCount,
   });
 
-  void _openPage(BuildContext context, ZiFormMode mode) {
-    final ctrl = CategoryController(formMode: mode)..prefill(category);
+  void openPage(BuildContext context, ZiFormMode mode) {
+    final ctrl = CategoryController(
+      storeId: "YOUR_STORE_ID", // 🔥
+      formMode: mode,
+    )..prefill(category);
 
     ziFormView(
       context,
@@ -29,7 +30,7 @@ class ActionsOnCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = CategoryController();
+    final ctrl = CategoryController(storeId: "YOUR_STORE_ID");
 
     return ZiOverOptionsActionButton(
       title: category.name,
@@ -38,16 +39,14 @@ class ActionsOnCategory extends StatelessWidget {
         ZiOverOptionsAction(
           icon: Icons.visibility_rounded,
           label: 'View',
-          onTap: () => _openPage(context, ZiFormMode.view),
+          onTap: () => openPage(context, ZiFormMode.view),
         ),
-
         if (!category.isSystem) ...[
           ZiOverOptionsAction(
             icon: Icons.edit_rounded,
             label: 'Edit',
-            onTap: () => _openPage(context, ZiFormMode.edit),
+            onTap: () => openPage(context, ZiFormMode.edit),
           ),
-
           ZiOverOptionsAction(
             icon: Icons.delete_rounded,
             label: 'Delete',
@@ -57,20 +56,12 @@ class ActionsOnCategory extends StatelessWidget {
                 context: context,
                 actionLabel: 'Delete Category',
                 actionOn: category.name,
-                infoContent: itemCount > 0
-                    ? '(moves $itemCount items to general)'
-                    : "",
                 icon: Icons.delete_rounded,
                 colorTone: ZiColors.lossR,
               );
 
               if (confirm == true) {
-                await ctrl.delete(
-                  category.uuid,
-                  CatalogType.values.firstWhere(
-                    (e) => e.name == category.catalogType,
-                  ),
-                );
+                await ctrl.delete(category.uuid);
               }
             },
           ),
