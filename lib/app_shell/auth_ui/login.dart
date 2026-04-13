@@ -104,6 +104,7 @@ class _LoginViewState extends State<LoginView> {
                             ZiLogger.log("Navigate to Dashboard ");
 
                             Navigator.pushAndRemoveUntil(
+                              // ignore: use_build_context_synchronously
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const StorePoolAppView(),

@@ -43,6 +43,7 @@ class CreateStoreController {
       );
       ZiLogger.log("Store created successfully");
 
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
     } catch (e) {
       ZiLogger.log("Error creating store: $e");

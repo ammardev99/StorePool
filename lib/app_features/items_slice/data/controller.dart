@@ -1,9 +1,6 @@
-// ─── Zi_Slice: Controller (UI ONLY - NORMALIZED) ─────────────────────────
-// ROLE: Form state only. No backend, no providers.
-// ─────────────────────────────────────────────────────────────────────────
-
 import 'package:flutter/material.dart';
 import 'package:storepool/app_models/catalog_items_table_data.dart';
+import 'package:storepool/firebase_services/store/catalog_item_service.dart';
 import 'package:zi_core/zi_core_io.dart';
 
 class CatalogController {
@@ -12,6 +9,11 @@ class CatalogController {
   CatalogController({this.formMode = ZiFormMode.add}) {
     _update();
   }
+
+  // 🔥 REQUIRED
+  String? storeId;
+
+  final CatalogItemService _service = CatalogItemService();
 
   // ── form ──────────────────────────────────────────────────────────────
   final formKey = GlobalKey<FormState>();
@@ -22,6 +24,9 @@ class CatalogController {
   final brandCtrl = TextEditingController();
   final stockCtrl = TextEditingController();
   final descCtrl = TextEditingController();
+
+  // ✅ ZiLoading style
+  bool isLoading = false;
 
   // ── notifiers ─────────────────────────────────────────────────────────
   final canSaveNotifier = ValueNotifier<bool>(false);
@@ -76,7 +81,7 @@ class CatalogController {
     hasChangesNotifier.value = _hasChanges;
   }
 
-  // ── prefill (for edit/view UI) ────────────────────────────────────────
+  // ── prefill ───────────────────────────────────────────────────────────
   void prefill(Map<String, dynamic> item) {
     existingUuid = item["uuid"];
 
@@ -94,7 +99,6 @@ class CatalogController {
         brandCtrl.text.isNotEmpty ||
         descCtrl.text.isNotEmpty;
 
-    // snapshot originals
     _origName = nameCtrl.text;
     _origPrice = priceCtrl.text;
     _origSku = skuCtrl.text;
@@ -107,23 +111,81 @@ class CatalogController {
     _update();
   }
 
-  // ── submit (UI ONLY) ──────────────────────────────────────────────────
+  // ── CREATE ────────────────────────────────────────────────────────────
   Future<bool> submit() async {
     if (!formKey.currentState!.validate()) return false;
+    if (storeId == null) return false;
 
-    // simulate success (no backend)
-    await Future.delayed(const Duration(milliseconds: 300));
+    isLoading = true;
 
-    return true;
+    try {
+      await _service.createItem(
+        storeId: storeId!,
+        title: nameCtrl.text.trim(),
+        price: double.parse(priceCtrl.text.trim()),
+        categoryUuid: selectedCategoryUuid ?? '',
+        catalogType: selectedType.name,
+        sku: skuCtrl.text.trim(),
+        brand: brandCtrl.text.trim(),
+        stockQty: int.tryParse(stockCtrl.text) ?? 0,
+        description: descCtrl.text.trim(),
+      );
+
+      isLoading = false;
+      return true;
+    } catch (e) {
+      isLoading = false;
+      return false;
+    }
   }
 
-  // ── update (UI ONLY) ──────────────────────────────────────────────────
+  // ── UPDATE ────────────────────────────────────────────────────────────
   Future<bool> update(String uuid) async {
     if (!formKey.currentState!.validate()) return false;
+    if (storeId == null) return false;
 
-    await Future.delayed(const Duration(milliseconds: 300));
+    isLoading = true;
 
-    return true;
+    try {
+      await _service.updateItem(
+        storeId: storeId!,
+        uuid: uuid,
+        title: nameCtrl.text.trim(),
+        price: double.parse(priceCtrl.text.trim()),
+        categoryUuid: selectedCategoryUuid ?? '',
+        catalogType: selectedType.name,
+        sku: skuCtrl.text.trim(),
+        brand: brandCtrl.text.trim(),
+        stockQty: int.tryParse(stockCtrl.text) ?? 0,
+        description: descCtrl.text.trim(),
+      );
+
+      isLoading = false;
+      return true;
+    } catch (e) {
+      isLoading = false;
+      return false;
+    }
+  }
+
+  // ── DELETE ────────────────────────────────────────────────────────────
+  Future<bool> delete(String uuid) async {
+    if (storeId == null) return false;
+
+    isLoading = true;
+
+    try {
+      await _service.deleteItem(
+        storeId: storeId!,
+        uuid: uuid,
+      );
+
+      isLoading = false;
+      return true;
+    } catch (e) {
+      isLoading = false;
+      return false;
+    }
   }
 
   // ── dispose ───────────────────────────────────────────────────────────

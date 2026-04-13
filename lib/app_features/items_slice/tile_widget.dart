@@ -1,7 +1,3 @@
-// ─── Zi_Slice: Tile (UI ONLY - NORMALIZED) ────────────────────────────────
-// ROLE: Pure UI list tile. No logic. No state. Callbacks only.
-// ─────────────────────────────────────────────────────────────────────────
-
 import 'package:flutter/material.dart';
 import 'package:storepool/app_features/items_slice/data/actions_on_tile.dart';
 import 'package:storepool/app_shell/widgets/price_text.dart';
@@ -12,12 +8,14 @@ class CatalogItemTile extends StatelessWidget {
   final Map<String, dynamic> item;
   final String categoryName;
   final String currencySign;
+  final String storeId; // ✅ NEW
 
   const CatalogItemTile({
     super.key,
     required this.item,
     required this.categoryName,
     required this.currencySign,
+    required this.storeId, // ✅ NEW
   });
 
   @override
@@ -26,7 +24,7 @@ class CatalogItemTile extends StatelessWidget {
 
     return InkWell(
       splashColor: ZiColors.accent,
-      onTap: isActive ? () {} : null, // no logic
+      onTap: isActive ? () {} : null,
       child: Opacity(
         opacity: isActive ? 1.0 : 0.5,
         child: Container(
@@ -40,7 +38,6 @@ class CatalogItemTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ── Title Row ───────────────────────────────
                     Row(
                       children: [
                         Expanded(
@@ -49,21 +46,19 @@ class CatalogItemTile extends StatelessWidget {
                             style: ZiTypoStyles.titleMd,
                           ),
                         ),
-
-                        if (!isActive) ...{
+                        if (!isActive)
                           Text(
                             'Inactive',
                             style: ZiTypoStyles.caption.copyWith(
                               color: ZiColors.error,
                             ),
-                          ),
-                        } else ...{
+                          )
+                        else ...{
                           if ((item["stockQty"] ?? 0) > 0)
                             ZiInfoTag(
                               tag: 'Qty',
                               value: item["stockQty"].toString(),
                             ),
-
                           if ((item["soldCount"] ?? 0) > 0)
                             ZiInfoTag(
                               tag: 'Sold',
@@ -72,10 +67,8 @@ class CatalogItemTile extends StatelessWidget {
                         },
                       ],
                     ),
-
                     ziGap(4),
 
-                    // ── SKU / Brand ─────────────────────────────
                     Row(
                       children: [
                         if (item["sku"] != null)
@@ -83,7 +76,6 @@ class CatalogItemTile extends StatelessWidget {
                             icon: Icons.qr_code_2_rounded,
                             value: item["sku"],
                           ),
-
                         if (item["brand"] != null)
                           ZiInfoTag(
                             icon: Icons.flag_rounded,
@@ -91,10 +83,8 @@ class CatalogItemTile extends StatelessWidget {
                           ),
                       ],
                     ),
-
                     ziGap(4),
 
-                    // ── Description ─────────────────────────────
                     Row(
                       children: [
                         if (item["description"] != null) ...{
@@ -107,10 +97,8 @@ class CatalogItemTile extends StatelessWidget {
                         },
                       ],
                     ),
-
                     ziGap(4),
 
-                    // ── Bottom Row ─────────────────────────────
                     Row(
                       children: [
                         Text(
@@ -118,11 +106,7 @@ class CatalogItemTile extends StatelessWidget {
                           style: ZiTypoStyles.caption,
                         ),
                         ziGap(4),
-                        Icon(
-                          Icons.category,
-                          size: 16,
-                          color: ZiColors.grayLight,
-                        ),
+                        Icon(Icons.category, size: 16, color: ZiColors.grayLight),
                         ziGap(8),
                         Text(categoryName, style: ZiTypoStyles.caption),
                         const Spacer(),
@@ -137,8 +121,11 @@ class CatalogItemTile extends StatelessWidget {
                 ),
               ),
 
-              // ── Actions (kept as-is) ─────────────────────────
-              CatalogItemTileActions(item: item),
+              // ✅ PASS storeId HERE
+              CatalogItemTileActions(
+                item: item,
+                storeId: storeId,
+              ),
             ],
           ),
         ),

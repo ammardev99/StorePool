@@ -95,10 +95,12 @@ Future<void> _loadUserData() async {
           setState(() {}); // refresh UI/loading
           if (success) {
             Navigator.pushReplacement(
+              // ignore: use_build_context_synchronously
               context,
               MaterialPageRoute(builder: (_) => const MenuView()),
             );
           } else {
+            // ignore: use_build_context_synchronously
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text("Failed to update profile")),
             );

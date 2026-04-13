@@ -1,14 +1,14 @@
-// ─── Zi_Slice: View (UI ONLY - NORMALIZED) ───────────────────────────────────
-// ROLE: Pure UI with dummy data. No state management, no services.
-// ─────────────────────────────────────────────────────────────────────────────
+
 
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:storepool/app_features/items_slice/data/form.dart';
 import 'package:storepool/app_features/items_slice/tile_widget.dart';
 import 'package:storepool/app_models/catalog_items_table_data.dart';
+import 'package:storepool/firebase_services/store/catalog_item_service.dart';
 import 'package:zi_core/zi_core_io.dart';
-
-
 
 class ItemsSliceView extends StatefulWidget {
   const ItemsSliceView({super.key});
@@ -21,31 +21,14 @@ class _ItemsSliceViewState extends State<ItemsSliceView>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
 
+  final CatalogItemService _service = CatalogItemService();
+
   CatalogType _activeType = CatalogType.product;
 
-  // ─── DUMMY DATA ───────────────────────────────────────────────────────────
-  final List<Map<String, dynamic>> _items = [
-    {
-      "name": "Product 1",
-      "price": 120,
-      "categoryUuid": "cat1",
-    },
-    {
-      "name": "Product 2",
-      "price": 250,
-      "categoryUuid": "cat2",
-    },
-    {
-      "name": "Service 1",
-      "price": 500,
-      "categoryUuid": "cat1",
-    },
-  ];
+  List<Map<String, dynamic>> _items = [];
+  bool _loading = true;
 
-  final Map<String, String> _categories = {
-    "cat1": "Category A",
-    "cat2": "Category B",
-  };
+  String? storeId; // ✅ dynamic now
 
   @override
   void initState() {
@@ -63,93 +46,131 @@ class _ItemsSliceViewState extends State<ItemsSliceView>
       setState(() {
         _activeType = CatalogType.values[_tabController.index];
       });
+
+      _loadItems();
     });
+
+    _initStoreAndLoad();
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
+  // ✅ get storeId from logged in user
+  Future<void> _initStoreAndLoad() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+
+      if (user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('User not logged in')),
+        );
+        setState(() => _loading = false);
+        return;
+      }
+
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      final stores = userDoc.data()?['stores_owned'];
+
+      if (stores == null || stores.isEmpty) {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No store found')),
+        );
+        setState(() => _loading = false);
+        return;
+      }
+
+      storeId = stores[0]; // ✅ first store
+
+      await _loadItems();
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to load store')),
+      );
+      setState(() => _loading = false);
+    }
   }
 
-  String _getCategoryName(String uuid) {
-    return _categories[uuid] ?? '';
+  Future<void> _loadItems() async {
+    if (storeId == null) return;
+
+    setState(() => _loading = true);
+
+    try {
+      final data = await _service.getItems(
+        storeId: storeId!,
+        type: _activeType.name,
+      );
+
+      setState(() => _items = data);
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to load items')),
+      );
+    }
+
+    setState(() => _loading = false);
   }
 
   String get _currencySign => 'Rs.';
 
   @override
   Widget build(BuildContext context) {
-    // filter dummy data by tab
-    final items =
-        _items.where((e) {
-          if (_activeType == CatalogType.product) {
-            return e["name"].toString().contains("Product");
-          } else {
-            return e["name"].toString().contains("Service");
-          }
-        }).toList();
-
     return ZiScaffoldB(
       appBar: ZiAppBarB(title: "Items Catalogs", centerTitle: true),
       showPagePadding: false,
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // ── Tab Bar ─────────────────────────────────────────────
-                ZiTabBar(
-                  controller: _tabController,
-                  type: ZiTabBarType.filter,
-                  tabs: CatalogType.values
-                      .map((type) => Tab(text: type.label))
-                      .toList(),
-                ),
-
-                Text(
-                  "${_activeType.label}s List (${items.length})",
-                  style: ZiTypoStyles.titleSm,
-                ),
-              ],
-            ),
+          ZiTabBar(
+            controller: _tabController,
+            type: ZiTabBarType.filter,
+            tabs: CatalogType.values
+                .map((type) => Tab(text: type.label))
+                .toList(),
           ),
-          const Divider(),
-
-          // ── List ────────────────────────────────────────────────────
           Expanded(
-            child: items.isEmpty
-                ? ZiNotFoundStateInfo()
-                : ListView.builder(
-                    itemCount: items.length,
-                    itemBuilder: (_, index) {
-                      final item = items[index];
+            child: _loading
+                ? const Center(child: CircularProgressIndicator())
+                : _items.isEmpty
+                    ? ZiNotFoundStateInfo()
+                    : RefreshIndicator(
+                        onRefresh: _loadItems,
+                        child: ListView.builder(
+                          itemCount: _items.length,
+                          itemBuilder: (_, index) {
+                            final item = _items[index];
 
-                      return CatalogItemTile(
-                        item: item, // still passing (UI untouched)
-                        categoryName:
-                            _getCategoryName(item["categoryUuid"]),
-                        currencySign: _currencySign,
-                      );
-                    },
-                  ),
+                            return CatalogItemTile(
+  item: item,
+  categoryName: item["categoryUuid"] ?? '',
+  currencySign: _currencySign,
+  storeId: storeId!, // ✅ PASS HERE
+);
+                          },
+                        ),
+                      ),
           ),
         ],
       ),
-
-      // ── FAB ───────────────────────────────────────────────────────
       floatingActionButton: ZiFABIconBtn(
-        onTap: () {
-          // Only UI navigation (no controller)
-          ziFormView(
+        onTap: () async {
+          if (storeId == null) return;
+
+          final res = await ziFormView(
             context,
             type: ZiFormViewType.page,
             title: 'Add ${_activeType.label}',
-            form: CatalogForm()// dummy
+            form: CatalogForm(
+              storeId: storeId!,
+              type: _activeType,
+            ),
           );
+
+          if (res == true) _loadItems();
         },
       ),
     );

@@ -73,6 +73,7 @@ Order Success Screen
 `Today's Complete`
 > 11 April 2026
 -item slice ui
+-category slice with firebase
 ---
 > 10 April 2026
 -category slice ui

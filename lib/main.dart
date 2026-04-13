@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:storepool/app_shell/app_shell_io.dart';
 import 'package:storepool/app_shell/auth_ui/onboarding/splash.dart';
-import 'package:storepool/app_shell/menu/store_menu/store_sub_pages/create_store_view.dart';
 import 'package:storepool/firebase_options.dart';
 
 import 'package:zi_core/zi_core_io.dart';

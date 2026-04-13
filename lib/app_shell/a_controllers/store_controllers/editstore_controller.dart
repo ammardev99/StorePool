@@ -68,9 +68,11 @@ class EditStoreController {
       category: selectedCategory,
       currency: selectedCurrency,
     );
+ // ignore: use_build_context_synchronously
  ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(content: Text("Store updated successfully"), backgroundColor: Colors.green),
   );
+    // ignore: use_build_context_synchronously
     Navigator.pop(context);
   } catch (e) {
     debugPrint("Error updating store: $e");

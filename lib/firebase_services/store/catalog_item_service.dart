@@ -53,8 +53,8 @@ class CatalogItemService {
     required String storeId,
     String? type,
   }) async {
-    Query<Map<String, dynamic>> query = _ref(storeId)
-        .orderBy("createdAt", descending: true);
+    Query<Map<String, dynamic>> query = _ref(storeId);
+    // .orderBy("createdAt", descending: true);
 
     if (type != null) {
       query = query.where("catalogType", isEqualTo: type);
@@ -109,8 +109,6 @@ class CatalogItemService {
     required String uuid,
     required bool isActive,
   }) async {
-    await _ref(storeId).doc(uuid).update({
-      "isActive": isActive,
-    });
+    await _ref(storeId).doc(uuid).update({"isActive": isActive});
   }
 }
