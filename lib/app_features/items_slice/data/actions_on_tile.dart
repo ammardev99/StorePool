@@ -36,6 +36,7 @@ class CatalogItemTileActions extends StatelessWidget {
     final confirm = await ziConfirmationDialogResult(
       context: context,
       actionLabel: 'Delete',
+      colorTone: ZiColors.lossR,
       actionOn: item["title"] ?? '',
     );
 
@@ -49,15 +50,18 @@ class CatalogItemTileActions extends StatelessWidget {
 
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Deleted successfully')),
+        const SnackBar(content: Text('Deleted successfully'),
+        backgroundColor: Colors.green,
+        ),
       );
 
       // ignore: use_build_context_synchronously
-      Navigator.pop(context, true);
     } catch (e) {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Delete failed')),
+        const SnackBar(content: Text('Delete failed'),
+        backgroundColor: ZiColors.inputError,
+        ),
       );
     }
   }

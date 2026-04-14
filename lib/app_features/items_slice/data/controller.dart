@@ -80,7 +80,6 @@ class CatalogController {
     hasChangesNotifier.value = _hasChanges;
   }
 
-  // ── prefill ───────────────────────────────────────────────────────────
   void prefill(Map<String, dynamic> item) {
     existingUuid = item["uuid"];
 

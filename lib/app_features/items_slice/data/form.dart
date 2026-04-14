@@ -117,7 +117,7 @@ class _CatalogFormState extends State<CatalogForm> {
       );
 
       // ignore: use_build_context_synchronously
-      Navigator.pop(context, true);
+      Navigator.pop(context);
     } catch (e) {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
