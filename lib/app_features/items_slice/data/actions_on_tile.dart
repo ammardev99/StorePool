@@ -8,7 +8,7 @@ class CatalogItemTileActions extends StatelessWidget {
   final Map<String, dynamic> item;
   final String storeId; // ✅ dynamic
 
-   CatalogItemTileActions({
+  CatalogItemTileActions({
     super.key,
     required this.item,
     required this.storeId,
@@ -23,7 +23,10 @@ class CatalogItemTileActions extends StatelessWidget {
       title: 'Edit Item',
       form: CatalogForm(
         storeId: storeId,
-        type: CatalogType.product,
+        type: CatalogType.values.firstWhere(
+          (t) => t.name == (item["catalogType"] ?? ''),
+          orElse: () => CatalogType.product,
+        ),
         item: item,
       ),
     );
@@ -43,15 +46,13 @@ class CatalogItemTileActions extends StatelessWidget {
     if (confirm != true) return;
 
     try {
-      await _service.deleteItem(
-        storeId: storeId,
-        uuid: item["uuid"],
-      );
+      await _service.deleteItem(storeId: storeId, uuid: item["uuid"]);
 
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Deleted successfully'),
-        backgroundColor: Colors.green,
+        const SnackBar(
+          content: Text('Deleted successfully'),
+          backgroundColor: Colors.green,
         ),
       );
 
@@ -59,8 +60,9 @@ class CatalogItemTileActions extends StatelessWidget {
     } catch (e) {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Delete failed'),
-        backgroundColor: ZiColors.inputError,
+        const SnackBar(
+          content: Text('Delete failed'),
+          backgroundColor: ZiColors.inputError,
         ),
       );
     }

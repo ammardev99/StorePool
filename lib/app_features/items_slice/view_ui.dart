@@ -122,7 +122,7 @@ class _ItemsSliceViewState extends State<ItemsSliceView>
   Widget build(BuildContext context) {
     return ZiScaffoldB(
       appBar: ZiAppBarB(title: "Items Catalogs", centerTitle: true),
-      showPagePadding: false,
+      showPagePadding: true,
       body: Column(
         children: [
           ZiTabBar(

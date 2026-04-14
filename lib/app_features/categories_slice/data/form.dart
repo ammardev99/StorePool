@@ -87,7 +87,7 @@ class CategoryFormState extends State<CategoryForm> {
               builder: (_, canSave, __) => ZiButtonB(
                 expand: true,
                 loading: ctrl.isLoading,
-                label: ctrl.isEdit ? 'Update Category' : 'Create Category',
+                label: ctrl.isEdit ? 'Update' : 'Add',
                 disabled: !canSave,
                 action: onAction,
               ),

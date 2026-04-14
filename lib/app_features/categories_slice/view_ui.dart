@@ -90,29 +90,26 @@ class CategoriesSliceViewState extends State<CategoriesSliceView>
   @override
   Widget build(BuildContext context) {
     return ZiScaffoldB(
-      showPagePadding: false,
+      showPagePadding: true,
       appBar: ZiAppBarB(title: "Categories", centerTitle: true),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ZiTabBar(
-                  controller: tabController,
-                  type: ZiTabBarType.filter,
-                  tabs:
-                      CatalogType.values
-                          .map((e) => Tab(text: e.label))
-                          .toList(),
-                ),
-                Text(
-                  "${activeType.label}s List (${categories.length})",
-                  style: ZiTypoStyles.titleSm,
-                ),
-              ],
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ZiTabBar(
+                controller: tabController,
+                type: ZiTabBarType.filter,
+                tabs:
+                    CatalogType.values
+                        .map((e) => Tab(text: e.label))
+                        .toList(),
+              ),
+              Text(
+                "${activeType.label}s List (${categories.length})",
+                style: ZiTypoStyles.titleSm,
+              ),
+            ],
           ),
 
           const Divider(),

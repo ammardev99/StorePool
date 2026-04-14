@@ -11,7 +11,9 @@
 
 ## new tasks
 <!-
-
+-category show in the item category 
+-pos design find and search
+-search kfc,mcdonald,subway,folk and knife,
 
 
 ## Assign Tasks
@@ -56,8 +58,13 @@ Order Success Screen
 
 
 `Today's Complete`
+> 14 April 2026
+-edit delete in category and items
+-fix padding in product nd service
+---
 > 13 April 2026
 -item slice with firebase
+---
 > 11 April 2026
 -item slice ui
 -category slice with firebase
