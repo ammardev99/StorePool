@@ -54,7 +54,7 @@ class CatalogItemService {
     String? type,
   }) async {
     Query<Map<String, dynamic>> query = _ref(storeId);
-    // .orderBy("createdAt", descending: true);
+   
 
     if (type != null) {
       query = query.where("catalogType", isEqualTo: type);

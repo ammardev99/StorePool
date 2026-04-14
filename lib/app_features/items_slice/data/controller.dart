@@ -73,7 +73,6 @@ class CatalogController {
       selectedType != _origType ||
       selectedCategoryUuid != _origCategoryUuid;
 
-  // ── notify ────────────────────────────────────────────────────────────
   void notify() => _update();
 
   void _update() {

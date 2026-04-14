@@ -5,9 +5,9 @@ import 'package:storepool/firebase_services/store/catalog_item_service.dart';
 import 'package:zi_core/zi_core_io.dart';
 
 class CatalogForm extends StatefulWidget with ZiFormMixin {
-  final String storeId; // ✅ NEW
-  final CatalogType type; // ✅ NEW
-  final Map<String, dynamic>? item; // ✅ NEW
+  final String storeId; 
+  final CatalogType type; 
+  final Map<String, dynamic>? item;
 
   const CatalogForm({
     super.key,
@@ -16,7 +16,6 @@ class CatalogForm extends StatefulWidget with ZiFormMixin {
     this.item,
   });
 
-  // ── ZiFormMixin (same) ───────────────────────────────────────────────
   @override
   ValueNotifier<bool> get hasChanges => ValueNotifier(true);
 
@@ -37,7 +36,6 @@ class _CatalogFormState extends State<CatalogForm> {
 
   bool loading = false;
 
-  // ── controllers (UNCHANGED) ───────────────────────────────────────────
   final nameCtrl = TextEditingController();
   final priceCtrl = TextEditingController();
   final skuCtrl = TextEditingController();
@@ -47,7 +45,6 @@ class _CatalogFormState extends State<CatalogForm> {
 
   bool showMore = false;
 
-  // ── dummy categories (UNCHANGED UI) ───────────────────────────────────
   final List<Map<String, String>> categories = [
     {"uuid": "1", "name": "General"},
     {"uuid": "2", "name": "Electronics"},
@@ -59,7 +56,6 @@ class _CatalogFormState extends State<CatalogForm> {
   void initState() {
     super.initState();
 
-    // ✅ PREFILL FOR EDIT
     if (widget.item != null) {
       final item = widget.item!;
 
@@ -80,7 +76,6 @@ class _CatalogFormState extends State<CatalogForm> {
     setState(() {});
   }
 
-  // ✅ UPDATED SAVE (FIREBASE CONNECTED)
   Future<void> _onSave() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -116,7 +111,9 @@ class _CatalogFormState extends State<CatalogForm> {
 
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Saved successfully')),
+        const SnackBar(content: Text('Saved successfully') ,
+        backgroundColor: Colors.green,
+        ),
       );
 
       // ignore: use_build_context_synchronously
@@ -124,7 +121,9 @@ class _CatalogFormState extends State<CatalogForm> {
     } catch (e) {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Operation failed')),
+        const SnackBar(content: Text('Operation failed') ,
+        backgroundColor: Colors.red,
+        ),
       );
     }
 
@@ -135,7 +134,6 @@ class _CatalogFormState extends State<CatalogForm> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // 🔥 YOUR UI — NOT CHANGED AT ALL
         Form(
           key: _formKey,
           child: ListView(

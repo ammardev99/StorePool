@@ -3,34 +3,39 @@ import 'package:storepool/app_models/catalog_categories_table_data.dart';
 import 'package:zi_core/zi_core_io.dart';
 import 'form.dart';
 import 'controller.dart';
+
 class ActionsOnCategory extends StatelessWidget {
   final CatalogCategoriesTableData category;
   final int itemCount;
+  final String storeId;
+  final VoidCallback? onActionCompleted;
 
   const ActionsOnCategory({
     super.key,
     required this.category,
     required this.itemCount,
+    required this.storeId,
+    this.onActionCompleted,
   });
 
-  void openPage(BuildContext context, ZiFormMode mode) {
-    final ctrl = CategoryController(
-      storeId: "YOUR_STORE_ID", // 🔥
-      formMode: mode,
-    )..prefill(category);
+  Future<void> openPage(BuildContext context, ZiFormMode mode) async {
+    final ctrl = CategoryController(storeId: storeId, formMode: mode)
+      ..prefill(category);
 
-    ziFormView(
+    final result = await ziFormView(
       context,
-      title: mode == ZiFormMode.view
-          ? 'Category Details'
-          : 'Edit Category',
+      title: mode == ZiFormMode.view ? 'Category Details' : 'Edit Category',
       form: CategoryForm(ctrl),
     );
+
+    if (result == true) {
+      onActionCompleted?.call();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = CategoryController(storeId: "YOUR_STORE_ID");
+    final ctrl = CategoryController(storeId: storeId);
 
     return ZiOverOptionsActionButton(
       title: category.name,
@@ -62,6 +67,7 @@ class ActionsOnCategory extends StatelessWidget {
 
               if (confirm == true) {
                 await ctrl.delete(category.uuid);
+                onActionCompleted?.call();
               }
             },
           ),

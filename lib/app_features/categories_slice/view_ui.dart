@@ -118,26 +118,47 @@ class CategoriesSliceViewState extends State<CategoriesSliceView>
           const Divider(),
 
           Expanded(
-            child:
-                isLoading && categories.isEmpty
-                    ? const Center(child: CircularProgressIndicator())
-                    : categories.isEmpty
-                    ? ZiNotFoundStateInfo()
-                    : ListView.builder(
-                      itemCount: categories.length,
-                      itemBuilder: (_, i) {
-                        final cat = categories[i];
-
-                        return CategoriesSliceTile(
-                          item: cat,
-                          onTap: () {},
-                          actions: ActionsOnCategory(
-                            category: cat,
-                            itemCount: itemCounts[cat.uuid] ?? 0,
+            child: RefreshIndicator(
+              onRefresh: load,
+              child:
+                  isLoading && categories.isEmpty
+                      ? ListView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        children: const [
+                          SizedBox(
+                            height: 360,
+                            child: Center(child: CircularProgressIndicator()),
                           ),
-                        );
-                      },
-                    ),
+                        ],
+                      )
+                      : categories.isEmpty
+                      ? ListView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        children: const [
+                          SizedBox(
+                            height: 360,
+                            child: Center(child: ZiNotFoundStateInfo()),
+                          ),
+                        ],
+                      )
+                      : ListView.builder(
+                        itemCount: categories.length,
+                        itemBuilder: (_, i) {
+                          final cat = categories[i];
+
+                          return CategoriesSliceTile(
+                            item: cat,
+                            onTap: () {},
+                            actions: ActionsOnCategory(
+                              storeId: storeId,
+                              category: cat,
+                              itemCount: itemCounts[cat.uuid] ?? 0,
+                              onActionCompleted: load,
+                            ),
+                          );
+                        },
+                      ),
+            ),
           ),
         ],
       ),
@@ -156,7 +177,7 @@ class CategoriesSliceViewState extends State<CategoriesSliceView>
           );
 
           if (result == true) {
-            load(); // 🔥 refresh after create/update
+            load();
           }
         },
       ),
