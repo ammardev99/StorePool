@@ -45,7 +45,7 @@ class _POSSaleSliceViewState extends State<POSSaleSliceView> {
           return POSSaleSliceTile(
             item: item,
             onTap: () {},
-            actions: XxxSliceActions(
+            actions: POSSliceActions(
               item: item,
               onReload: _load,
               onDelete: _delete,
@@ -55,12 +55,12 @@ class _POSSaleSliceViewState extends State<POSSaleSliceView> {
       ),
       floatingActionButton: ZiFABIconBtn(
         onTap: () async {
-          final ctrl = XxxSliceController();
+          final ctrl = POSSliceController();
 
           final result = await ziFormView(
             context,
             title: 'Add Item',
-            form: XxxSliceForm(
+            form: POSSliceForm(
               ctrl,
               onSubmit: (name) async {
                 ZiLogger.log("Create: $name");

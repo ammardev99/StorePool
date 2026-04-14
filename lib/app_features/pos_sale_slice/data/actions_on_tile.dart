@@ -11,12 +11,12 @@ import 'package:zi_core/zi_core_io.dart';
 import 'controller.dart';
 import 'form.dart';
 
-class XxxSliceActions extends StatelessWidget {
+class POSSliceActions extends StatelessWidget {
   final dynamic item;
   final Future<void> Function()? onReload;
   final Future<void> Function(String uuid)? onDelete;
 
-  const XxxSliceActions({
+  const POSSliceActions({
     super.key,
     required this.item,
     this.onReload,
@@ -35,13 +35,13 @@ class XxxSliceActions extends StatelessWidget {
           icon: Icons.visibility_rounded,
           label: 'View',
           onTap: () {
-            final ctrl = XxxSliceController(formMode: ZiFormMode.view)
+            final ctrl = POSSliceController(formMode: ZiFormMode.view)
               ..prefill(item);
             ziFormView(
               context,
               type: ZiFormViewType.page,
               title: 'Details',
-              form: XxxSliceForm(ctrl),
+              form: POSSliceForm(ctrl),
             );
           },
         ),
@@ -51,14 +51,14 @@ class XxxSliceActions extends StatelessWidget {
           icon: Icons.edit_rounded,
           label: 'Edit',
           onTap: () async {
-            final ctrl = XxxSliceController(formMode: ZiFormMode.edit)
+            final ctrl = POSSliceController(formMode: ZiFormMode.edit)
               ..prefill(item);
 
             final result = await ziFormView(
               context,
               type: ZiFormViewType.page,
               title: 'Edit',
-              form: XxxSliceForm(ctrl),
+              form: POSSliceForm(ctrl),
             );
             if (result == true && onReload != null) {
               await onReload!();

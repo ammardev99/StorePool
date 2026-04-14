@@ -11,9 +11,6 @@
 
 ## new tasks
 <!-
--category show in the item category 
--pos design find and search
--search kfc,mcdonald,subway,folk and knife,
 
 
 ## Assign Tasks
@@ -52,15 +49,17 @@ Order Success Screen
 
 `Selected InProgress Points`
 --
--role in menu 
+-user role show in the manu
+-remember me option when signup and login (so user not login again and again)
 
 
 
 
 `Today's Complete`
 > 14 April 2026
--edit delete in category and items
+-edit,delete in categoryview and itemsview
 -fix padding in product nd service
+-category show in the item category
 ---
 > 13 April 2026
 -item slice with firebase

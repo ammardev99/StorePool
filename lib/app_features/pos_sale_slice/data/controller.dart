@@ -9,10 +9,10 @@
 import 'package:flutter/material.dart';
 import 'package:zi_core/zi_core_io.dart';
 
-class XxxSliceController {
+class POSSliceController {
   ZiFormMode formMode;
 
-  XxxSliceController({this.formMode = ZiFormMode.add}) {
+  POSSliceController({this.formMode = ZiFormMode.add}) {
     _update();
   }
 
@@ -37,11 +37,9 @@ class XxxSliceController {
   String get actionLabel => isEdit ? 'Update' : 'Save';
 
   // Validation
-  bool get _canSave =>
-      isAdd ? nameCtrl.text.trim().isNotEmpty : _hasChanges;
+  bool get _canSave => isAdd ? nameCtrl.text.trim().isNotEmpty : _hasChanges;
 
-  bool get _hasChanges =>
-      nameCtrl.text.trim() != _origName;
+  bool get _hasChanges => nameCtrl.text.trim() != _origName;
 
   void notify() => _update();
 
@@ -72,7 +70,9 @@ class XxxSliceController {
   }
 
   // Update
-  Future<bool> update(Future<bool> Function(String uuid, String name)? onUpdate) async {
+  Future<bool> update(
+    Future<bool> Function(String uuid, String name)? onUpdate,
+  ) async {
     if (!formKey.currentState!.validate()) return false;
 
     if (onUpdate != null && existingUuid != null) {

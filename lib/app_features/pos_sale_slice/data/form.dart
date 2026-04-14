@@ -12,13 +12,13 @@ import 'package:zi_core/zi_core_io.dart';
 
 import '../a_pos_sale_slice_io.dart';
 
-class XxxSliceForm extends StatefulWidget with ZiFormMixin {
-  final XxxSliceController ctrl;
+class POSSliceForm extends StatefulWidget with ZiFormMixin {
+  final POSSliceController ctrl;
 
   final Future<bool> Function(String name)? onSubmit;
   final Future<bool> Function(String uuid, String name)? onUpdate;
 
-  const XxxSliceForm(this.ctrl, {super.key, this.onSubmit, this.onUpdate});
+  const POSSliceForm(this.ctrl, {super.key, this.onSubmit, this.onUpdate});
 
   @override
   ValueNotifier<bool> get hasChanges => ctrl.hasChangesNotifier;
@@ -30,11 +30,11 @@ class XxxSliceForm extends StatefulWidget with ZiFormMixin {
   VoidCallback? get onClose => ctrl.dispose;
 
   @override
-  State<XxxSliceForm> createState() => _XxxSliceFormState();
+  State<POSSliceForm> createState() => _POSSliceFormState();
 }
 
-class _XxxSliceFormState extends State<XxxSliceForm> {
-  XxxSliceController get ctrl => widget.ctrl;
+class _POSSliceFormState extends State<POSSliceForm> {
+  POSSliceController get ctrl => widget.ctrl;
 
   void _onChange() {
     setState(() {});

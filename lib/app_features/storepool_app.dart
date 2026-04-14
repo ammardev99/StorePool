@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:storepool/app_features/order_history_slice/view_ui.dart';
+import 'package:storepool/app_features/pos_sale_slice/view_ui.dart';
 import 'package:storepool/firebase_services/store/store_service.dart';
 
 import 'package:zi_core/zi_core_io.dart';
@@ -53,7 +54,7 @@ class _StorePoolAppViewState extends State<StorePoolAppView> {
         CategoriesSliceView(storeId: _storeId ?? ""),
         // - Items,
         const ItemsSliceView(),
-
+const POSSaleSliceView(),
         // - Web,
         // - Orders,
         // OrdersSliceView(),
@@ -69,7 +70,7 @@ class _StorePoolAppViewState extends State<StorePoolAppView> {
     TabItem(icon: Icons.category, title: 'Categories'),
     // - Items,
     TabItem(icon: Icons.list, title: 'Items'),
-
+    TabItem(icon: Icons.point_of_sale, title: 'POS'),
     // - Web,
     // - Orders,
     TabItem(icon: Icons.shopping_cart, title: 'Orders'),
