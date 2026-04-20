@@ -67,7 +67,6 @@ Order Success Screen
 
 `Selected InProgress Points`
 --
--remember me option when signup and login (so user not login again and again)
 
 
 
@@ -77,6 +76,7 @@ Order Success Screen
 -design the pos sale slice
 -add hold card file in pos sale slice
 -user role show in the manu
+-remember me option when signup and login (so user not login again and again)
 
 ---
 > 14 April 2026
