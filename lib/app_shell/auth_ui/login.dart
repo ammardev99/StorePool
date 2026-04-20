@@ -87,6 +87,21 @@ class _LoginViewState extends State<LoginView> {
                   ],
                 ),
                 ziGap(10),
+                Row(
+                  children: [
+                    ZiCheckbox(
+                      value: controller.rememberMe,
+                      onChanged: (v) {
+                        setState(() {
+                          controller.rememberMe = v;
+                        });
+                      },
+                    ),
+                    ziGap(10),
+                    const Text("Remember Me"),
+                  ],
+                ),
+                ziGap(10),
                 ZiButtonB(
                   label: "Login",
                   expand: true,

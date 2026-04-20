@@ -9,6 +9,7 @@ class LoginController {
   final AuthService _authService = AuthService();
 
   bool isLoading = false;
+  bool rememberMe = false;
 
   LoginController() {
     ZiLogger.log("LoginController initialized ");
@@ -42,9 +43,9 @@ class LoginController {
         password: password,
       );
 
-      ZiLogger.log(result
-          ? "Login Success  UID: ${_authService.currentUser?.uid}"
-          : "Login Failed ");
+      if (result) {
+        await _authService.setRememberMe(rememberMe);
+      }
 
       return result;
     } catch (e) {

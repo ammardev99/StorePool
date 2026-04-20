@@ -17,6 +17,7 @@ class SignupController {
   // ─── State ──────────────────────────────────────
   bool agreedToTerms = false;
   bool isLoading = false;
+  bool rememberMe = false;
 
   // ─── Constructor
   SignupController() {
@@ -85,14 +86,15 @@ class SignupController {
       isLoading = false;
 
       if (result) {
-        ZiLogger.log("Signup Success ✅");
+        await _authService.setRememberMe(rememberMe);
+        ZiLogger.log("Signup Success ");
         return true;
       } else {
-        ZiLogger.log("Signup Failed ❌: User not registered");
+        ZiLogger.log("Signup Failed : User not registered");
         return false;
       }
     } catch (e, stackTrace) {
-      ZiLogger.log("Error during signup ❌: $e");
+      ZiLogger.log("Error during signup : $e");
       ZiLogger.log(stackTrace.toString());
       isLoading = false;
       return false;

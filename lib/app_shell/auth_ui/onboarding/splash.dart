@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:zi_core/zi_core_io.dart';
 
 import '../../app_shell_io.dart';
+import '../../../app_features/storepool_app.dart';
+import '../../../firebase_services/auth/auth_service.dart';
 
 class ZiSplashScreen extends StatefulWidget {
   const ZiSplashScreen({super.key});
@@ -31,13 +33,29 @@ class _ZiSplashScreenState extends State<ZiSplashScreen>
       end: 1,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
     _controller.forward();
-    _controller.addStatusListener((status) {
+    _controller.addStatusListener((status) async {
       if (status == AnimationStatus.completed) {
+        final authService = AuthService();
+        final bool rememberMe = await authService.getRememberMe();
+        final user = authService.currentUser;
+
         Timer(const Duration(seconds: 1), () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => const ZAppGateView()),
-          );
+          if (rememberMe && user != null) {
+            ZiLogger.log("Auto-login: User remembered and logged in. Navigating to Dashboard.");
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const StorePoolAppView()),
+            );
+          } else {
+            ZiLogger.log("Auto-login: User not remembered or session expired. Logging out for safety and navigating to Gate.");
+            if (user != null) {
+              authService.logout();
+            }
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const ZAppGateView()),
+            );
+          }
         });
       }
     });

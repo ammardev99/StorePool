@@ -2,11 +2,28 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zi_core/zi_core_io.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  static const String _rememberMeKey = "remember_me";
+
+  // =========================================================
+  // ✅ REMEMBER ME HELPERS
+  // =========================================================
+  Future<void> setRememberMe(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_rememberMeKey, value);
+    ZiLogger.log("Remember Me set to: $value");
+  }
+
+  Future<bool> getRememberMe() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_rememberMeKey) ?? false;
+  }
 
   // =========================================================
   // ✅ SIGNUP (WITH STRUCTURED USER DATA)

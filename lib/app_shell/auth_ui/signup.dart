@@ -134,6 +134,22 @@ class _SignupViewState extends State<SignupView> {
                     ),
                   ],
                 ),
+                ziGap(10),
+                Row(
+                  children: [
+                    ZiCheckbox(
+                      value: controller.rememberMe,
+                      onChanged: (v) {
+                        setState(() {
+                          controller.rememberMe = v;
+                        });
+                      },
+                    ),
+                    ziGap(10),
+                    const Text("Remember Me"),
+                  ],
+                ),
+                ziGap(10),
 
                 ziGap(10),
 
