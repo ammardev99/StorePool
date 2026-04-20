@@ -1,89 +1,48 @@
-// ─── Zi_Slice: Controller ─────────────────────────────────────────────────────
-// ROLE: Form state only. Validation, notifiers, submit, update, dispose.
-// RULE: Never access BuildContext. Never navigate. Never show dialogs.
-// RULE: notify() must be called on every field change.
-// RULE: prefill() must snapshot originals at the end then call notify().
-// RENAME: XxxSliceController → YourFeatureController
-// ─────────────────────────────────────────────────────────────────────────────
-
 import 'package:flutter/material.dart';
-import 'package:zi_core/zi_core_io.dart';
 
 class POSSliceController {
-  ZiFormMode formMode;
+  POSSliceController();
 
-  POSSliceController({this.formMode = ZiFormMode.add}) {
-    _update();
-  }
-
+  /// FORM KEY
   final formKey = GlobalKey<FormState>();
 
-  // Fields
-  final nameCtrl = TextEditingController();
+  /// ================= FIELDS =================
 
-  // State
+  final nameCtrl = TextEditingController();
+  final qtyCtrl = TextEditingController();
+  final rateCtrl = TextEditingController();
+
+  /// ================= STATE =================
+
   final canSaveNotifier = ValueNotifier<bool>(false);
   final hasChangesNotifier = ValueNotifier<bool>(false);
 
-  String? existingUuid;
+  /// ================= CHANGE HANDLER =================
 
-  // Originals
-  String _origName = '';
+  void onChange() {
+    hasChangesNotifier.value = true;
 
-  bool get isAdd => formMode == ZiFormMode.add;
-  bool get isEdit => formMode == ZiFormMode.edit;
-  bool get isView => formMode == ZiFormMode.view;
+    /// SIMPLE VALIDATION (UI LEVEL ONLY)
+    final canSave = nameCtrl.text.isNotEmpty &&
+        qtyCtrl.text.isNotEmpty &&
+        rateCtrl.text.isNotEmpty;
 
-  String get actionLabel => isEdit ? 'Update' : 'Save';
-
-  // Validation
-  bool get _canSave => isAdd ? nameCtrl.text.trim().isNotEmpty : _hasChanges;
-
-  bool get _hasChanges => nameCtrl.text.trim() != _origName;
-
-  void notify() => _update();
-
-  void _update() {
-    canSaveNotifier.value = _canSave;
-    hasChangesNotifier.value = _hasChanges;
+    canSaveNotifier.value = canSave;
   }
 
-  // Prefill
-  void prefill(dynamic data) {
-    existingUuid = data.uuid;
+  /// ================= NOTIFY =================
 
-    nameCtrl.text = data.name ?? '';
-    _origName = nameCtrl.text;
-
-    _update();
+  void notify() {
+    onChange();
   }
 
-  // Submit
-  Future<bool> submit(Future<bool> Function(String name)? onSubmit) async {
-    if (!formKey.currentState!.validate()) return false;
-
-    if (onSubmit != null) {
-      return await onSubmit(nameCtrl.text.trim());
-    }
-
-    return false;
-  }
-
-  // Update
-  Future<bool> update(
-    Future<bool> Function(String uuid, String name)? onUpdate,
-  ) async {
-    if (!formKey.currentState!.validate()) return false;
-
-    if (onUpdate != null && existingUuid != null) {
-      return await onUpdate(existingUuid!, nameCtrl.text.trim());
-    }
-
-    return false;
-  }
+  /// ================= DISPOSE =================
 
   void dispose() {
     nameCtrl.dispose();
+    qtyCtrl.dispose();
+    rateCtrl.dispose();
+
     canSaveNotifier.dispose();
     hasChangesNotifier.dispose();
   }

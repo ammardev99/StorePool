@@ -5,8 +5,26 @@
 ---
 
 ## OnDemand Zi_Core Teams
+-tags show in zi core right side bar user copy and use in prompt
+-color not override in input border by styling and focus color
+-zi states on web
+-we can search widget by name in web package app
+- navigation missing in store menu
+- - in form controller path itself _io
+- zata to "data"
 
 
+---
+-only number keyboard open on the phone number -verify on mobile
+- zi_slice to "aa_slice"
+- in slices zi_slice_io to "a_aa_slice_io"
+- vision -> i need "zi_core slice feature_name "
+- export all slices in view io
+- add another sandwork file
+- auto activate the sand file in menu
+- in FAB add item to "Add"
+- add dummy each field in slice
+- count color analytics card
 
 
 ## new tasks

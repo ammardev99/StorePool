@@ -1,54 +1,19 @@
-// ─── Zi_Slice: Form ───────────────────────────────────────────────────────────
-// ROLE: Inputs + save button only. Owned by controller. No navigation logic.
-// RULE: All fields must have enabled: !ctrl.isView
-// RULE: All fields must call _onChange() in onChanged
-// RULE: Non-text fields must call ctrl.notify() directly
-// RULE: Save button uses ValueListenableBuilder(ctrl.canSaveNotifier)
-// RENAME: XxxSliceForm → YourFeatureForm
-// ─────────────────────────────────────────────────────────────────────────────
-
 import 'package:flutter/material.dart';
+import 'package:storepool/app_features/pos_sale_slice/data/controller.dart';
 import 'package:zi_core/zi_core_io.dart';
 
-import '../a_pos_sale_slice_io.dart';
-
 class POSSliceForm extends StatefulWidget with ZiFormMixin {
-  final POSSliceController ctrl;
-
-  final Future<bool> Function(String name)? onSubmit;
-  final Future<bool> Function(String uuid, String name)? onUpdate;
-
-  const POSSliceForm(this.ctrl, {super.key, this.onSubmit, this.onUpdate});
-
-  @override
-  ValueNotifier<bool> get hasChanges => ctrl.hasChangesNotifier;
-
-  @override
-  ZiFormMode get mode => ctrl.formMode;
-
-  @override
-  VoidCallback? get onClose => ctrl.dispose;
+  const POSSliceForm({super.key});
 
   @override
   State<POSSliceForm> createState() => _POSSliceFormState();
 }
 
 class _POSSliceFormState extends State<POSSliceForm> {
-  POSSliceController get ctrl => widget.ctrl;
+  final ctrl = POSSliceController();
 
   void _onChange() {
-    setState(() {});
-    ctrl.notify();
-  }
-
-  Future<void> _onAction() async {
-    final ok =
-        ctrl.isEdit
-            ? await ctrl.update(widget.onUpdate)
-            : await ctrl.submit(widget.onSubmit);
-
-    if (!mounted) return;
-    if (ok) Navigator.pop(context, true);
+    ctrl.onChange();
   }
 
   @override
@@ -58,28 +23,64 @@ class _POSSliceFormState extends State<POSSliceForm> {
       child: Column(
         children: [
           ZiInput(
-            label: 'Name',
             controller: ctrl.nameCtrl,
-            enabled: !ctrl.isView,
+            label: 'Item Name',
+            variant: ZiInputVariant.stacked,
+            enabled: true,
             onChanged: (_) => _onChange(),
             validator: (v) => v!.isEmpty ? 'Required' : null,
           ),
 
           ziGap(20),
 
-          if (!ctrl.isView)
-            ValueListenableBuilder<bool>(
-              valueListenable: ctrl.canSaveNotifier,
-              builder:
-                  (_, canSave, __) => ZiButtonB(
-                    expand: true,
-                    label: ctrl.actionLabel,
-                    disabled: !canSave,
-                    action: _onAction,
-                  ),
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: ZiInput(
+                  variant: ZiInputVariant.stacked,
+                  controller: ctrl.qtyCtrl,
+                  enabled: true,
+
+                  label: 'Qty',
+                  onChanged: (_) => _onChange(),
+                  validator: (v) => v!.isEmpty ? 'Required' : null,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: ZiInput(
+                  controller: ctrl.rateCtrl,
+                  label: 'Sale Rate',
+                  enabled: true,
+                  variant: ZiInputVariant.stacked,
+                  onChanged: (_) => _onChange(),
+                  validator: (v) => v!.isEmpty ? 'Required' : null,
+                ),
+              ),
+            ],
+          ),
+
+          ziGap(20),
+
+          /// SAVE BUTTON WITH NOTIFIER
+          ValueListenableBuilder(
+            valueListenable: ctrl.canSaveNotifier,
+            builder: (_, canSave, __) {
+              return ZiButtonB(
+                expand: true,
+                label: "Save",
+                action: () {},
+              );
+            },
+          ),
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    ctrl.dispose();
+    super.dispose();
   }
 }
