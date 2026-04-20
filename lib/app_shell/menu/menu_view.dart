@@ -1,81 +1,3 @@
-// // ignore_for_file: use_build_context_synchronously
-
-// import 'package:flutter/material.dart';
-// import 'package:zi_core/zi_core_io.dart';
-// import '../app_shell_io.dart';
-
-// class MenuView extends StatelessWidget {
-//   const MenuView({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     // DO: Get user data from provider or state
-//     const userName = 'User';
-//     const userEmail = '';
-
-//     return ZiScaffoldB(
-//       showPagePadding: false,
-//       body: Column(
-//         children: [
-//           ziGap(20),
-//           Padding(
-//             padding: const EdgeInsets.all(15),
-//             child: Column(
-//               children: [
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     Column(
-//                       children: [
-//                         ZiSvgIcon(
-//                           path: ShellSVGs.avPerson,
-//                           color: ZiColors.primary,
-//                           size: 80,
-//                         ),
-//                         heroSectionContent(
-//                           // img: ShellImages.avPerson,
-//                           // svgImg: ShellSVGs.avPerson,
-//                           title: userName,
-//                           content: userEmail,
-//                         ),
-//                       ],
-//                     ),
-//                   ],
-//                 ),
-//                 ActionTile(
-//                   title: "Free Plan",
-//                   actionLabel: "Upgrade",
-//                   onActionTap: () => UpgradeDialog.show(context),
-//                 ),
-//               ],
-//             ),
-//           ),
-//           ziGap(10),
-//           Divider(height: 2, color: ZiColors.border),
-//           Expanded(
-//             child: ListView(
-//               padding: const EdgeInsets.all(0),
-//               children: [
-//                 buildGroupedMenu(context, showGroupTitle: false),
-//                 ZiMenuTile1(
-//                   icon: Icons.power_settings_new_rounded,
-//                   iconPrefixColor: Colors.red,
-//                   label: "Logout",
-//                   action: ZiTapAction(
-//                     type: ZiTapActionType.custom,
-//                     onTap: () async {
-//                       // DO: Implement logout action
-//                     },
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 
 import 'package:flutter/material.dart';
 import 'package:storepool/firebase_services/auth/auth_service.dart';
@@ -108,8 +30,8 @@ class _MenuViewState extends State<MenuView> {
     final data = await _authService.getUserData();
     if (data != null) {
       setState(() {
-        userName = data['name'] ?? 'User';
-        userEmail = data['email'] ?? '';
+        userName = data['profile']?['name'] ?? 'User';
+        userEmail = data['profile']?['email'] ?? '';
         userRole = data['role'] ?? '';
         isLoading = false;
       });

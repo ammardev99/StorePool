@@ -67,13 +67,18 @@ Order Success Screen
 
 `Selected InProgress Points`
 --
--user role show in the manu
 -remember me option when signup and login (so user not login again and again)
 
 
 
 
 `Today's Complete`
+> 20 april 2026
+-design the pos sale slice
+-add hold card file in pos sale slice
+-user role show in the manu
+
+---
 > 14 April 2026
 -edit,delete in categoryview and itemsview
 -fix padding in product nd service
