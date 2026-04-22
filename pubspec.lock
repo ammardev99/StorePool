@@ -97,6 +97,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  dart_console:
+    dependency: transitive
+    description:
+      name: dart_console
+      sha256: bf62b8016530fef83557c1f01867c281d0937dceb84204128819e6e925ddf73f
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.4"
   fake_async:
     dependency: transitive
     description:
@@ -597,6 +605,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  win32:
+    dependency: transitive
+    description:
+      name: win32
+      sha256: d7cb55e04cd34096cd3a79b3330245f54cb96a370a1c27adb3c84b917de8b08e
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.15.0"
   xdg_directories:
     dependency: transitive
     description:
@@ -613,15 +629,23 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.5.0"
+  yaml:
+    dependency: "direct main"
+    description:
+      name: yaml
+      sha256: b9da305ac7c39faa3f030eccd175340f968459dae4af175130b3fc47e40d76ce
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.3"
   zi_core:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v1.0.1"
-      resolved-ref: a477c50167bd5d5e4cafa113ed15a2ff5e676f3b
+      ref: "v1.0.3"
+      resolved-ref: "2258d85d518c9deb99c33888c4e05b754ef9684c"
       url: "https://github.com/ammardev99/zi_core.git"
     source: git
-    version: "1.0.1"
+    version: "1.0.3"
 sdks:
   dart: ">=3.9.0 <4.0.0"
   flutter: ">=3.35.0"
