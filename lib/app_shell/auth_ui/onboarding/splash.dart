@@ -87,7 +87,7 @@ class _ZiSplashScreenState extends State<ZiSplashScreen>
                 const Spacer(),
                 Text(
                   ShellData.appSplash.description!,
-                  style: ZiTypoStyles.bodyMedium.copyWith(
+                  style: ZiTypoStyles.bodyMd.copyWith(
                     color: ZiColors.surface,
                   ),
                   textAlign: TextAlign.center,

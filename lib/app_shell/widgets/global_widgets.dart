@@ -129,7 +129,7 @@ class GlobalWidgets extends StatelessWidget {
                         // ziGap(4),
                         // Text(
                         //   "Comment or Text here, Comment or Text here, Comment or Text here",
-                        //   style: ZiTypoStyles.bodyMedium.copyWith(
+                        //   style: ZiTypoStyles.bodyMd.copyWith(
                         //     color: ZiColors.text,
                         //   ),
                         // ),
@@ -184,7 +184,7 @@ class GlobalWidgets extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("Staff Tile", style: ZiTypoStyles.titleMd),
-                        Text("0342 4264494", style: ZiTypoStyles.bodyMedium),
+                        Text("0342 4264494", style: ZiTypoStyles.bodyMd),
                         ziGap(6),
                         Row(
                           children: [
@@ -234,7 +234,7 @@ class GlobalWidgets extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("Customer Tile", style: ZiTypoStyles.titleMd),
-                        Text("0342 4264494", style: ZiTypoStyles.bodyMedium),
+                        Text("0342 4264494", style: ZiTypoStyles.bodyMd),
                         ziGap(6),
                         Row(
                           children: [
@@ -291,7 +291,7 @@ class GlobalWidgets extends StatelessWidget {
                             ),
                             Text(
                               "Service info",
-                              style: ZiTypoStyles.bodyMedium,
+                              style: ZiTypoStyles.bodyMd,
                             ),
                             ziGap(6),
                             Row(

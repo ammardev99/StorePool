@@ -53,7 +53,7 @@ class _POSSaleSliceViewState extends State<POSSaleSliceView> {
                 children: [
                   Text(
                     "5 Items (12)",
-                    style: ZiTypoStyles.bodyMedium.copyWith(
+                    style: ZiTypoStyles.bodyMd.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -61,7 +61,7 @@ class _POSSaleSliceViewState extends State<POSSaleSliceView> {
                     children: [
                       Text(
                         "3,500",
-                        style: ZiTypoStyles.bodyMedium.copyWith(
+                        style: ZiTypoStyles.bodyMd.copyWith(
                           color: ZiColors.gray,
                           decoration: TextDecoration.lineThrough,
                         ),
@@ -136,7 +136,7 @@ class _POSSaleSliceViewState extends State<POSSaleSliceView> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   "phone no",
-                  style: ZiTypoStyles.bodyMedium.copyWith(color: ZiColors.gray),
+                  style: ZiTypoStyles.bodyMd.copyWith(color: ZiColors.gray),
                 ),
               ),
 
@@ -164,11 +164,11 @@ class _POSSaleSliceViewState extends State<POSSaleSliceView> {
       ),
       child: Row(
         children: [
-          Text(label, style: ZiTypoStyles.bodyMedium),
+          Text(label, style: ZiTypoStyles.bodyMd),
           const Spacer(),
           Text(
             value,
-            style: ZiTypoStyles.bodyMedium.copyWith(
+            style: ZiTypoStyles.bodyMd.copyWith(
               fontWeight: FontWeight.bold,
               color: valueColor,
             ),
@@ -224,7 +224,7 @@ class _POSSaleSliceViewState extends State<POSSaleSliceView> {
             Text(
               'you can add personal details to strong the pos store profile',
               textAlign: TextAlign.center,
-              style: ZiTypoStyles.bodyMedium,
+              style: ZiTypoStyles.bodyMd,
             ),
             ziGap(100),
             ZiButtonB(

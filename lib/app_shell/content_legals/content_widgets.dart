@@ -67,7 +67,7 @@ class ShellDescriptionCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: ZiColors.primary.withValues( alpha:  0.15)),
       ),
-      child: Text(text, style: ZiTypoStyles.bodyMedium.copyWith(height: 1.7)),
+      child: Text(text, style: ZiTypoStyles.bodyMd.copyWith(height: 1.7)),
     );
   }
 }
@@ -111,7 +111,7 @@ class ShellInfoHeaderCard extends StatelessWidget {
           Expanded(
             child: Text(
               info,
-              style: ZiTypoStyles.bodyMedium.copyWith(height: 1.65),
+              style: ZiTypoStyles.bodyMd.copyWith(height: 1.65),
             ),
           ),
         ],
@@ -188,7 +188,7 @@ class _ShellNumberedItem extends StatelessWidget {
               padding: const EdgeInsets.only(top: 3),
               child: Text(
                 text,
-                style: ZiTypoStyles.bodyMedium.copyWith(height: 1.6),
+                style: ZiTypoStyles.bodyMd.copyWith(height: 1.6),
               ),
             ),
           ),
@@ -264,10 +264,10 @@ class _ShellFeatureItem extends StatelessWidget {
               text,
               style:
                   isComingSoon
-                      ? ZiTypoStyles.bodyMedium.copyWith(
+                      ? ZiTypoStyles.bodyMd.copyWith(
                         color: ZiColors.textMuted,
                       )
-                      : ZiTypoStyles.bodyMedium,
+                      : ZiTypoStyles.bodyMd,
             ),
           ),
         ],

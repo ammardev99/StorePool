@@ -91,7 +91,7 @@ class HoldCart extends StatelessWidget {
               children: [
                 Text(
                   "# 4115623",
-                  style: ZiTypoStyles.bodyMedium.copyWith(
+                  style: ZiTypoStyles.bodyMd.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -100,7 +100,7 @@ class HoldCart extends StatelessWidget {
 
                 Text(
                   "Info here",
-                  style: ZiTypoStyles.bodyMedium.copyWith(
+                  style: ZiTypoStyles.bodyMd.copyWith(
                     color: Colors.grey,
                     fontSize: 13,
                   ),
@@ -116,7 +116,7 @@ class HoldCart extends StatelessWidget {
                     ziGap(4),
                     Text(
                       "9 Oct",
-                      style: ZiTypoStyles.bodyMedium.copyWith(
+                      style: ZiTypoStyles.bodyMd.copyWith(
                         color: Colors.grey,
                       ),
                     ),
@@ -131,7 +131,7 @@ class HoldCart extends StatelessWidget {
 
                     Text(
                       "9:00 AM",
-                      style: ZiTypoStyles.bodyMedium.copyWith(
+                      style: ZiTypoStyles.bodyMd.copyWith(
                         color: Colors.grey,
                       ),
                     ),

@@ -122,7 +122,7 @@ class AboutPageView extends StatelessWidget {
               icon: Icons.contact_support_outlined,
             ),
             const SizedBox(height: 6),
-            Text(ShellData.appContact.info, style: ZiTypoStyles.bodyMedium),
+            Text(ShellData.appContact.info, style: ZiTypoStyles.bodyMd),
             ziGap(12),
             if (ShellData.appContact.items != null)
               ShellContactList(items: ShellData.appContact.items!),
@@ -196,7 +196,7 @@ class _AppIdentitySection extends StatelessWidget {
         ),
         if (ShellData.appInfo.description != null) ...[
           const SizedBox(height: 10),
-          Text(ShellData.appInfo.description!, style: ZiTypoStyles.bodyMedium),
+          Text(ShellData.appInfo.description!, style: ZiTypoStyles.bodyMd),
         ],
       ],
     );

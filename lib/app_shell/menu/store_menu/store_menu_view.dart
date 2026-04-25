@@ -75,7 +75,7 @@ class _StoreMenuViewState extends State<StoreMenuView> {
                 ),
               ),
               title: Text(storeName, style: ZiTypoStyles.titleLg),
-              subtitle: Text(storeCategory, style: ZiTypoStyles.bodyMedium),
+              subtitle: Text(storeCategory, style: ZiTypoStyles.bodyMd),
             ),
           ),
           ziGap(10),

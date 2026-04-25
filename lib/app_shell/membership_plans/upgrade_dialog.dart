@@ -177,7 +177,7 @@ class _UpgradeDialogContentState extends State<_UpgradeDialogContent> {
           const SizedBox(height: 6),
           Text(
             "Tap any plan to see all features",
-            style: ZiTypoStyles.bodyMedium.copyWith(color: ZiColors.textDark),
+            style: ZiTypoStyles.bodyMd.copyWith(color: ZiColors.textDark),
             textAlign: TextAlign.center,
           ),
 
@@ -443,7 +443,7 @@ class _UpgradeDialogContentState extends State<_UpgradeDialogContent> {
                             Expanded(
                               child: Text(
                                 feature,
-                                style: ZiTypoStyles.bodyMedium.copyWith(
+                                style: ZiTypoStyles.bodyMd.copyWith(
                                   height: 1.4,
                                 ),
                               ),

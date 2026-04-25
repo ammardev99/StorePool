@@ -50,7 +50,7 @@ class _FAQTile extends StatelessWidget {
       child: ExpansionTile(
         title: Text(faq.question, style: ZiTypoStyles.inputLabel),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-        children: [Text(faq.answer, style: ZiTypoStyles.bodyMedium)],
+        children: [Text(faq.answer, style: ZiTypoStyles.bodyMd)],
       ),
     );
   }

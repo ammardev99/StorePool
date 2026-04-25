@@ -73,8 +73,8 @@ class _ItemsSliceViewState extends State<ItemsSliceView>
       final stores = userDoc.data()?['stores_owned'];
 
       if (stores == null || stores.isEmpty) {
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(
+          // ignore: use_build_context_synchronously
           context,
         ).showSnackBar(const SnackBar(content: Text('No store found')));
         setState(() => _loading = false);
@@ -85,8 +85,8 @@ class _ItemsSliceViewState extends State<ItemsSliceView>
 
       await _loadItems();
     } catch (e) {
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(
+      // ignore: use_build_context_synchronously
         context,
       ).showSnackBar(const SnackBar(content: Text('Failed to load store')));
       setState(() => _loading = false);
@@ -106,8 +106,8 @@ class _ItemsSliceViewState extends State<ItemsSliceView>
 
       setState(() => _items = data);
     } catch (e) {
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(
+      // ignore: use_build_context_synchronously
         context,
       ).showSnackBar(const SnackBar(content: Text('Failed to load items')));
     }

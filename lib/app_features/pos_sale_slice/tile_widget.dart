@@ -48,7 +48,7 @@ class POSSaleSliceTile extends StatelessWidget {
                       ziGap(4),
                       Text(
                         item["phone"],
-                        style: ZiTypoStyles.bodyMedium.copyWith(
+                        style: ZiTypoStyles.bodyMd.copyWith(
                           color: ZiColors.gray,
                         ),
                       ),
@@ -76,7 +76,7 @@ class POSSaleSliceTile extends StatelessWidget {
                         /// QTY
                         Text(
                           qty.toString(),
-                          style: ZiTypoStyles.bodyMedium.copyWith(
+                          style: ZiTypoStyles.bodyMd.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -96,7 +96,7 @@ class POSSaleSliceTile extends StatelessWidget {
                         /// MULTIPLY TEXT
                         Text(
                           "$qty x $price",
-                          style: ZiTypoStyles.bodyMedium.copyWith(
+                          style: ZiTypoStyles.bodyMd.copyWith(
                             color: ZiColors.textMuted,
                           ),
                         ),
@@ -127,7 +127,7 @@ class POSSaleSliceTile extends StatelessWidget {
                     /// TOTAL PRICE
                     Text(
                       "Rs $total",
-                      style: ZiTypoStyles.bodyMedium.copyWith(
+                      style: ZiTypoStyles.bodyMd.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
